@@ -5,4 +5,4 @@ class Exerice(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str 
     age: Optional[int] = Field(default=None, index=True)
-    serie: str
+    series: str
