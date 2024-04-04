@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
 from datetime import date
 
 class User(SQLModel, table=True):
@@ -9,3 +9,4 @@ class User(SQLModel, table=True):
     email = str 
     password = str
     birth_date : date = None
+    workouts : list['Workout'] = Relationship(back_populates='user')
