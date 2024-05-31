@@ -8,5 +8,5 @@ class User(SQLModel, table=True):
     last_name: str
     email = str 
     password = str
-    birth_date : date = None
-    workouts : list['Workout'] = Relationship(back_populates='user')
+    birth_date : date | None = None
+    workouts : list['Workout']= Relationship(back_populates='user')
