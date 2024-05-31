@@ -2,33 +2,33 @@ import React from "react";
 
 const Login = () => {
   return (
-    <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-lg text-center">
-        <h1 class="text-2xl font-bold sm:text-3xl">Get started today!</h1>
+    <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-lg text-center">
+        <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
 
-        <p class="mt-4 text-gray-500">
+        <p className="mt-4 text-gray-500">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero
           nulla eaque error neque ipsa culpa autem, at itaque nostrum!
         </p>
       </div>
 
-      <form action="#" class="mx-auto mb-0 mt-8 max-w-md space-y-4">
+      <form action="#" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
         <div>
-          <label for="email" class="sr-only">
+          <label for="email" className="sr-only">
             Email
           </label>
 
-          <div class="relative">
+          <div className="relative">
             <input
               type="email"
-              class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+              className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Enter email"
             />
 
-            <span class="absolute inset-y-0 end-0 grid place-content-center px-4">
+            <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="size-4 text-gray-400"
+                className="size-4 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -45,21 +45,21 @@ const Login = () => {
         </div>
 
         <div>
-          <label for="password" class="sr-only">
+          <label for="password" className="sr-only">
             Password
           </label>
 
-          <div class="relative">
+          <div className="relative">
             <input
               type="password"
-              class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+              className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Enter password"
             />
 
-            <span class="absolute inset-y-0 end-0 grid place-content-center px-4">
+            <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="size-4 text-gray-400"
+                className="size-4 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -81,17 +81,17 @@ const Login = () => {
           </div>
         </div>
 
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500">
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-500">
             No account?
-            <a class="underline" href="#">
+            <a className="underline" href="#">
               Sign up
             </a>
           </p>
 
           <button
             type="submit"
-            class="inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
+            className="inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
           >
             Sign in
           </button>
