@@ -3,16 +3,18 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import {Login, Home} from "./pages";
+import { Login, Home } from "./pages";
+import { SideBar } from "./components";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home/>,
+    element: <SideBar />,
+    children: [{ path: "", element: <Home /> }],
   },
   {
     path: "/login",
-    element:<Login/>,
+    element: <Login />,
   },
 ]);
 
