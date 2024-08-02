@@ -3,6 +3,7 @@ import { bodyValidator } from "../middlewares/bodyValidator";
 import { UserCreate, UserWithoutPassword } from "../validators/user";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import jwt, { Secret } from "jsonwebtoken";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -26,9 +27,34 @@ router.post("/login", async (req: Request, res: Response) => {
   const body = req.body;
   const user = await prisma.user.findUnique({
     where: { email: body.email },
-    select: UserWithoutPassword,
   });
-  if (user) res.status(200).send(user);
+
+  if (user) {
+    bcrypt.compare(body.password, user?.password, (err, result) => {
+      if (err) {
+        console.log("🚀 ~ bcrypt.compare ~ err:", err);
+        res.status(500).send({ error: "Internal server error" });
+      } else if (result) {
+        const accessToken = jwt.sign(
+          { id: user.id },
+          process.env.AUTH_SECRET as Secret,
+          {
+            expiresIn: "2 days",
+          }
+        );
+        res.status(200).send({
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          accessToken: accessToken,
+        });
+      } else {
+        res.status(401).send({ error: "Invalid username or password" });
+      }
+    });
+    return;
+  }
+
   res.status(400).send({ error: "User not found." });
 });
 
