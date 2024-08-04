@@ -4,6 +4,7 @@ import { UserCreate, UserWithoutPassword } from "../validators/user";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt, { Secret } from "jsonwebtoken";
+import { authentication } from "../middlewares/auth";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -23,7 +24,7 @@ router.post(
   }
 );
 
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/login", authentication, async (req: Request, res: Response) => {
   const body = req.body;
   const user = await prisma.user.findUnique({
     where: { email: body.email },
@@ -32,8 +33,8 @@ router.post("/login", async (req: Request, res: Response) => {
   if (user) {
     bcrypt.compare(body.password, user?.password, (err, result) => {
       if (err) {
-        console.log("🚀 ~ bcrypt.compare ~ err:", err);
         res.status(500).send({ error: "Internal server error" });
+        return;
       } else if (result) {
         const accessToken = jwt.sign(
           { id: user.id },
