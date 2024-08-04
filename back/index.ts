@@ -3,6 +3,8 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { logger } from "./middlewares/logger";
 import auth from "./routes/auth";
+import workouts from "./routes/workouts";
+import { authentication } from "./middlewares/auth";
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(logger);
 
 app.use("/api/auth", auth);
+app.use("/api/workouts", authentication, workouts);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
