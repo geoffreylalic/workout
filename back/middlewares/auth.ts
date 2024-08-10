@@ -24,11 +24,12 @@ export const authentication = async (
     ) as JwtPayload;
     const user = await prisma.user.findUnique({
       where: { id: payload.id },
-      select: UserWithoutPassword
+      select: UserWithoutPassword,
     });
-    req.user = user
+    req.user = user;
   } catch (error) {
     res.status(401).send({ error: error });
+    return;
   }
 
   next();

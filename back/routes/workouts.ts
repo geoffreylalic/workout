@@ -21,15 +21,51 @@ router.post(
   "",
   bodyValidator(WorkoutCreate),
   async (req: UserReq, res: Response, next: NextFunction) => {
-    const body = req.body;
+    const { exercices, ...workout } = req.body;
+    const sets = exercices.map((ex: any) => {
+      return ex.sets;
+    });
     try {
-      const workout = await prisma.workout.create({
-        data: { ...body, userId: req.user.id },
+      await prisma.$transaction(async (tx) => {
+        const createdWorkout = await tx.workout.create({
+          data: {
+            userId: req.user.id,
+            ...workout,
+          },
+        });
+        await tx.exercice.createMany({
+          data: exercices.map((ex: any) => {
+            delete ex.sets;
+            return {
+              workoutId: createdWorkout.id,
+              userId: req.user.id,
+              ...ex,
+            };
+          }),
+        });
+        const createdExercices = await tx.exercice.findMany({
+          where: {
+            workoutId: createdWorkout.id,
+          },
+        });
+
+        const setsToCreate = createdExercices
+          .map((exercice, index) => {
+            return sets[index].map((set: any) => {
+              set.exerciceId = exercice.id;
+              set.userId = req.user.id
+              return set;
+            });
+          })
+          .flat();
+        await tx.set.createMany({ data: setsToCreate });
       });
-      res.status(201).send(workout);
-    } catch (error) {
-      res.status(400).send({ error: error });
+    } catch (error) {      
+      res.status(400).send(error);
+      return;
     }
+    res.send({ succes: true });
+
     return;
   }
 );
