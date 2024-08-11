@@ -1,6 +1,28 @@
 import React from "react";
+import { login } from "../queries/authentication";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Login = () => {
+  const queryClient = useQueryClient();
+
+  const loginMutation = useMutation({
+    mutationFn: (data) => login(data),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      localStorage.setItem("accessToken", response.data.accessToken);
+    },
+  });
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const formData = new FormData(evt.target);
+    const data = {};
+    for (var [key, value] of formData.entries()) {
+      data[key] = value;
+    }
+    loginMutation.mutate(data);
+  };
+
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-lg text-center">
@@ -12,7 +34,11 @@ const Login = () => {
         </p>
       </div>
 
-      <form action="#" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
+      <form
+        action="#"
+        className="mx-auto mb-0 mt-8 max-w-md space-y-4"
+        onSubmit={(evt) => handleSubmit(evt)}
+      >
         <div>
           <label for="email" className="sr-only">
             Email
@@ -21,6 +47,7 @@ const Login = () => {
           <div className="relative">
             <input
               type="email"
+              name="email"
               className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Enter email"
             />
@@ -52,6 +79,7 @@ const Login = () => {
           <div className="relative">
             <input
               type="password"
+              name="password"
               className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Enter password"
             />
