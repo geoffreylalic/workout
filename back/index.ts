@@ -1,10 +1,11 @@
 // src/index.js
-import express, { Express, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import { logger } from "./middlewares/logger";
 import auth from "./routes/auth";
 import workouts from "./routes/workouts";
 import { authentication } from "./middlewares/auth";
+import cors from "cors";
 
 dotenv.config();
 
@@ -13,6 +14,9 @@ const port = process.env.PORT || 3000;
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(logger);
+app.use((req: Request, res: Response, next: NextFunction) => {
+  next();
+}, cors({ maxAge: 84600 }));
 
 app.use("/api/auth", auth);
 app.use("/api/workouts", authentication, workouts);
