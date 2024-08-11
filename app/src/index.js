@@ -6,9 +6,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Login, Home, Workouts } from "./pages";
 import { SideBar } from "./components";
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
