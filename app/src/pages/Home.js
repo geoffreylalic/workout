@@ -1,9 +1,18 @@
-import React from 'react'
-
+import React from "react";
+import Workouts from "./workouts/Workouts";
+import { Button, Typography } from "@material-tailwind/react";
 const Home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <div className="pl-5">
+      <div className="flex justify-between px-10 py-8">
+        <div className="">
+          <Typography className="text-2xl font-bold">Workouts</Typography>
+        </div>
+        <Button>Add workout</Button>
+      </div>
+      <Workouts />
+    </div>
+  );
+};
 
-export default Home
+export default Home;
