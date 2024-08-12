@@ -1,15 +1,17 @@
 import React from "react";
 import { login } from "../queries/authentication";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const loginMutation = useMutation({
     mutationFn: (data) => login(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       localStorage.setItem("accessToken", response.data.accessToken);
+      navigate("/");
     },
   });
 
