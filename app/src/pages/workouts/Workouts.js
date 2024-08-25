@@ -9,6 +9,7 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import Calendar from "../../components/Calendar";
 function CheckIcon() {
   return (
     <svg
@@ -33,12 +34,13 @@ const Workouts = () => {
   if (error) {
     console.log(error);
   }
-  if (data) {
-    return data.map((workout) => (
+  const RenderWorkouts = () =>
+    data.map((workout, key) => (
       <Card
         color="gray"
         variant="gradient"
         className="w-full max-w-[20rem] p-8"
+        key={key}
       >
         <CardHeader
           floated={false}
@@ -51,9 +53,6 @@ const Workouts = () => {
         <CardBody className="p-0">
           <ul className="flex flex-col gap-4">
             <li className="flex items-center gap-4">
-              <span className="rounded-full border border-white/20 bg-white/20 p-1">
-                <CheckIcon />
-              </span>
               <Typography className="font-normal">
                 Life time technical support
               </Typography>
@@ -73,6 +72,15 @@ const Workouts = () => {
         </CardFooter>
       </Card>
     ));
+  if (data) {
+    return (
+      <div className="mx-auto">
+        <div className="justify-between grid grid-cols-5 gap-10">
+          <RenderWorkouts />
+        </div>
+        <Calendar />
+      </div>
+    );
   }
 };
 
