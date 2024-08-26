@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { Button } from "@material-tailwind/react";
 import dayjs from "dayjs";
 import { MONTHS } from "../utils";
+import { CreateWorkoutDialog } from "./CreateWorkoutDialog";
 
-const Calendar = () => {
+const Calendar = (props) => {
+  const [open, setOpen] = useState(false);
+  const { addName, onClickAdd } = props;
   const [currentDate, setCurrentDate] = useState(dayjs());
   const nbDaysinMonth = currentDate.daysInMonth();
   const [daysDisplay, setDaysDisplay] = useState([]);
@@ -106,8 +109,9 @@ const Calendar = () => {
             <Button
               type="button"
               className="ml-6 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              onClick={setOpen}
             >
-              Add event
+              {addName}
             </Button>
           </div>
           <div className="relative ml-6 md:hidden">
@@ -181,6 +185,7 @@ const Calendar = () => {
           </div>
         </div>
       </div>
+      <CreateWorkoutDialog open={open} setOpen={setOpen} />
     </div>
   );
 };
