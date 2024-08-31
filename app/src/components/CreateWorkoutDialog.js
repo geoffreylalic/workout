@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Input,
   Button,
   Dialog,
   IconButton,
@@ -12,46 +11,15 @@ import {
   Step,
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-
-const renderExcericesNames = (exNum) => {
-  const elements = [];
-  for (let index = 1; index <= exNum; index++) {
-    elements.push(
-      <div key={index} className="pt-3">
-        <Typography
-          variant="small"
-          color="blue-gray"
-          className="mb-2 text-left font-medium"
-        >
-          Exercise #{index}
-        </Typography>
-        <Input
-          color="gray"
-          size="lg"
-          placeholder={`Exercise #${index}`}
-          name="name"
-          className="placeholder:opacity-100 focus:!border-t-gray-900"
-          required
-          containerProps={{
-            className: "!min-w-full",
-          }}
-          labelProps={{
-            className: "hidden",
-          }}
-        />
-      </div>
-    );
-  }
-  return elements;
-};
+import FirstStep from "../pages/FirstStep";
+import SecondStep from "../pages/SecondStep";
 
 export function CreateWorkoutDialog(props) {
   const { open, setOpen } = props;
-
+  const  [exercicesName, setExercicesName ] = useState({});
   const [activeStep, setActiveStep] = useState(0);
   const [isLastStep, setIsLastStep] = useState(false);
   const [isFirstStep, setIsFirstStep] = useState(false);
-  const [exNum, setExNum] = useState(1);
 
   const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
@@ -87,58 +55,8 @@ export function CreateWorkoutDialog(props) {
           </div>
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6 h-[42rem] overflow-y-scroll">
-          <div>
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="mb-2 text-left font-medium"
-            >
-              Name
-            </Typography>
-            <Input
-              color="gray"
-              size="lg"
-              placeholder="eg. White Shoes"
-              name="name"
-              className="placeholder:opacity-100 focus:!border-t-gray-900"
-              required
-              containerProps={{
-                className: "!min-w-full",
-              }}
-              labelProps={{
-                className: "hidden",
-              }}
-            />
-          </div>
-          <div>
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="mb-2 text-left font-medium"
-            >
-              How many exercices?
-            </Typography>
-            <Input
-              color="gray"
-              size="lg"
-              placeholder="eg. White Shoes"
-              name="name"
-              type="number"
-              className="placeholder:opacity-100 focus:!border-t-gray-900"
-              containerProps={{
-                className: "!min-w-full",
-              }}
-              labelProps={{
-                className: "hidden",
-              }}
-              required
-              value={exNum}
-              onChange={(evt) => setExNum(evt.target.value)}
-            />
-          </div>
-          <div className="flex gap-4"></div>
-
-          <div>{renderExcericesNames(exNum)}</div>
+          {activeStep === 0 && <FirstStep setExercicesName={setExercicesName} />}
+          {activeStep === 1 && <SecondStep exercicesName={exercicesName} />}
         </DialogBody>
         <DialogFooter className="flex justify-between">
           <Button onClick={handlePrev} disabled={isFirstStep}>
