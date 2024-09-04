@@ -12,17 +12,33 @@ import {
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import FirstStep from "../pages/FirstStep";
-import SecondStep from "../pages/SecondStep";
+import ExercicesSteps from "../pages/ExercicesSteps";
 
 export function CreateWorkoutDialog(props) {
   const { open, setOpen } = props;
-  const  [exercicesName, setExercicesName ] = useState({});
+  const [exercicesName, setExercicesName] = useState({ 0: "firstStep" });
   const [activeStep, setActiveStep] = useState(0);
   const [isLastStep, setIsLastStep] = useState(false);
   const [isFirstStep, setIsFirstStep] = useState(false);
 
   const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
+
+  const renderExercicesBody = () => {
+    // if (isLastStep || isFirstStep) return;
+    return Object.entries(exercicesName).map(([key, value]) => {
+      key = parseInt(key)
+      return (
+        activeStep === key + 1 && (
+          <ExercicesSteps
+            className="h-4 w-4"
+            key={key}
+            value={exercicesName[key + 1]}
+          />
+        )
+      );
+    });
+  };
 
   return (
     <>
@@ -48,15 +64,22 @@ export function CreateWorkoutDialog(props) {
               isLastStep={(value) => setIsLastStep(value)}
               isFirstStep={(value) => setIsFirstStep(value)}
             >
-              <Step className="h-4 w-4" onClick={() => setActiveStep(0)} />
-              <Step className="h-4 w-4" onClick={() => setActiveStep(1)} />
-              <Step className="h-4 w-4" onClick={() => setActiveStep(2)} />
+              {Object.keys(exercicesName).map((exKey) => {
+                return (
+                  <Step
+                    className="h-4 w-4"
+                    onClick={() => {
+                      setActiveStep(exKey);
+                    }}
+                  />
+                );
+              })}
             </Stepper>
           </div>
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6 h-[42rem] overflow-y-scroll">
-          {activeStep === 0 && <FirstStep setExercicesName={setExercicesName} />}
-          {activeStep === 1 && <SecondStep exercicesName={exercicesName} />}
+          {isFirstStep && <FirstStep setExercicesName={setExercicesName} />}
+          {renderExercicesBody()}
         </DialogBody>
         <DialogFooter className="flex justify-between">
           <Button onClick={handlePrev} disabled={isFirstStep}>
