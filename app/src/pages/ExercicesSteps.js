@@ -10,10 +10,18 @@ const ExercicesSteps = (props) => {
     },
   ]);
 
-  const handleChange = (index, field  , value) => {
+  const handleInputChange = (index, field, value) => {
     setSets((prevSets) =>
       prevSets.map((set, i) => (i === index ? { ...set, [field]: value } : set))
     );
+  };
+
+  const addSet = () => {
+    setSets([...sets, { reps: 0, rest: 0 }]);
+  };
+
+  const removeSet = (index) => {
+    setSets(sets.filter((_, i) => i !== index));
   };
 
   const renderRepsAndRest = () => {
@@ -39,7 +47,6 @@ const ExercicesSteps = (props) => {
               color="gray"
               size="lg"
               placeholder="Reps"
-              name="name"
               className="placeholder:opacity-100 focus:!border-t-gray-900"
               required
               containerProps={{
@@ -48,8 +55,10 @@ const ExercicesSteps = (props) => {
               labelProps={{
                 className: "hidden",
               }}
+              value={set.reps}
+              type="number"
               onChange={(evt) => {
-                handleChange(index, "reps", evt.target.value);
+                handleInputChange(index, "reps", evt.target.value);
               }}
             />
           </div>
@@ -65,7 +74,6 @@ const ExercicesSteps = (props) => {
               color="gray"
               size="lg"
               placeholder="Rest"
-              name="name"
               className="placeholder:opacity-100 focus:!border-t-gray-900"
               required
               containerProps={{
@@ -74,22 +82,26 @@ const ExercicesSteps = (props) => {
               labelProps={{
                 className: "hidden",
               }}
+              value={set.rest}
+              type="number"
               onChange={(evt) => {
-                handleChange(index, "rest", evt.target.value);
+                handleInputChange(index, "rest", evt.target.value);
               }}
             />
           </div>
-          <Button
-            className="m-3"
-            onClick={setSets([...sets, { reps: 0, rest: 0 }])}
-          >
+          <Button className="m-3" onClick={addSet}>
             +
           </Button>
-          <Button className="m-3">-</Button>
+          {sets.length > 1 && (
+            <Button className="m-3" onClick={() => removeSet(index)}>
+              -
+            </Button>
+          )}
         </div>
       </div>
     ));
   };
+
   return (
     <div>
       <h1>{value}</h1>
