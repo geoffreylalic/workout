@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input, Typography } from "@material-tailwind/react";
 
 const FirstStep = (props) => {
-  const { setExercicesName = () => {} } = props;
+  const { setExercicesName = () => {}, setWorkoutName = () => {} } = props;
   const [exNum, setExNum] = useState(1);
 
   const renderExcericesNames = (exNum) => {
@@ -66,6 +66,7 @@ const FirstStep = (props) => {
           labelProps={{
             className: "hidden",
           }}
+          onChange={(evt) => setWorkoutName(evt.target.value)}
         />
       </div>
       <div>
