@@ -1,9 +1,13 @@
 import { z } from "zod";
-import { ExerciceCreate } from "./exercice";
+import { ExerciceCreateFull } from "./exercice";
+
+export const WorkoutCreateFull = z.object({
+  name: z.string(),
+  exercices: z.array(ExerciceCreateFull),
+});
 
 export const WorkoutCreate = z.object({
   name: z.string(),
-  exercices: z.array(ExerciceCreate),
 });
 
 export const WorkoutUpdate = z.object({

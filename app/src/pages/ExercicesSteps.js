@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button, Input, Typography } from "@material-tailwind/react";
 
 const ExercicesSteps = (props) => {

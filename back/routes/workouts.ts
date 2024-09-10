@@ -1,7 +1,11 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction, Router } from "express";
 import { UserReq } from "../interfaces/request";
-import { WorkoutCreate, WorkoutUpdate } from "../validators/workout";
+import {
+  WorkoutCreate,
+  WorkoutCreateFull,
+  WorkoutUpdate,
+} from "../validators/workout";
 import { bodyValidator } from "../middlewares/bodyValidator";
 
 const router = Router();
@@ -20,6 +24,22 @@ router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
 router.post(
   "",
   bodyValidator(WorkoutCreate),
+  async (req: UserReq, res: Response, next: NextFunction) => {
+    const { name } = req.body;
+    console.log("🚀 ~ router.post ~ workout:", name);
+    const workout = await prisma.workout.create({
+      data: {
+        name: name,
+        userId: req.user.id,
+      },
+    });
+    res.status(200).send("ok");
+  }
+);
+
+router.post(
+  "/full",
+  bodyValidator(WorkoutCreateFull),
   async (req: UserReq, res: Response, next: NextFunction) => {
     const { exercices, ...workout } = req.body;
     const sets = exercices.map((ex: any) => {
@@ -53,14 +73,14 @@ router.post(
           .map((exercice, index) => {
             return sets[index].map((set: any) => {
               set.exerciceId = exercice.id;
-              set.userId = req.user.id
+              set.userId = req.user.id;
               return set;
             });
           })
           .flat();
         await tx.set.createMany({ data: setsToCreate });
       });
-    } catch (error) {      
+    } catch (error) {
       res.status(400).send(error);
       return;
     }
