@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { SetCreate } from "./set";
+import { SetCreateFull } from "./set";
 
 export const ExerciceCreateFull = z.object({
   name: z.string(),
-  sets: z.array(SetCreate),
+  sets: z.array(SetCreateFull),
 });
 
 export const ExerciceCreate = z.object({

@@ -26,14 +26,13 @@ router.post(
   bodyValidator(WorkoutCreate),
   async (req: UserReq, res: Response, next: NextFunction) => {
     const { name } = req.body;
-    console.log("🚀 ~ router.post ~ workout:", name);
     const workout = await prisma.workout.create({
       data: {
         name: name,
         userId: req.user.id,
       },
     });
-    res.status(200).send("ok");
+    res.status(200).send(workout);
   }
 );
 

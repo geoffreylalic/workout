@@ -1,31 +1,36 @@
 import { PrismaClient } from "@prisma/client";
 import { Response, NextFunction, Router } from "express";
 import { UserReq } from "../interfaces/request";
+import { WorkoutUpdate } from "../validators/workout";
 import { bodyValidator } from "../middlewares/bodyValidator";
 import { ExerciceCreate, ExercicePut } from "../validators/exercice";
+import { SetCreate, SetPut, timeToDatetime } from "../validators/set";
 
 const router = Router();
 const prisma = new PrismaClient();
 
 router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
-  const exercices = await prisma.exercice.findMany({
+  const sets = await prisma.set.findMany({
     where: {
       createdBy: req.user,
     },
   });
-  res.status(200).send(exercices);
+  res.status(200).send(sets);
 });
 
 router.post(
   "",
-  bodyValidator(ExerciceCreate),
+  bodyValidator(SetCreate),
   async (req: UserReq, res: Response, next: NextFunction) => {
-    const { name, workoutId } = req.body;
-    const exercice = await prisma.exercice.create({
+    const { repetitions, weight, rest, exerciceId } = req.body;
+    const restDateTime = timeToDatetime.parse(rest);
+    const exercice = await prisma.set.create({
       data: {
-        name: name,
-        workout: { connect: { id: workoutId } },
+        repetitions,
+        weight,
+        rest: restDateTime,
         createdBy: { connect: { id: req.user.id } },
+        exercice: { connect: { id: exerciceId } },
       },
     });
     res.send({ exercice });
@@ -34,16 +39,16 @@ router.post(
 
 router.put(
   "/:id",
-  bodyValidator(ExercicePut),
+  bodyValidator(SetPut),
   async (req: UserReq, res: Response, next: NextFunction) => {
-    const exerciceId = req.params.id;
-    const body = req.body;
+    const setId = req.params.id;
+    const body = { ...req.body, rest: timeToDatetime.parse(req.body.rest) };
     try {
-      const exercice = await prisma.exercice.update({
-        where: { id: parseInt(exerciceId) },
+      const set = await prisma.set.update({
+        where: { id: parseInt(setId), createdBy: req.user },
         data: body,
       });
-      res.status(200).send(exercice);
+      res.status(200).send(set);
     } catch (error) {
       res.status(400).send({ error: error });
     }
@@ -53,10 +58,10 @@ router.put(
 router.delete(
   "/:id",
   async (req: UserReq, res: Response, next: NextFunction) => {
-    const exerciceId = req.params.id;
+    const setId = req.params.id;
     try {
-      await prisma.exercice.delete({
-        where: { id: parseInt(exerciceId) },
+      await prisma.set.delete({
+        where: { id: parseInt(setId), createdBy: req.user },
       });
       res.status(204).send();
     } catch (error) {
