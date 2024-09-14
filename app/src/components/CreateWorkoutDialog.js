@@ -14,70 +14,47 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import FirstStep from "../pages/FirstStep";
 import ExercicesSteps from "../pages/ExercicesSteps";
 import LastStep from "../pages/LastStep";
+import { useMutation } from "@tanstack/react-query";
+import { createWorkout } from "../queries/workouts";
 
 export function CreateWorkoutDialog(props) {
   const { setOpen, open } = props;
-  const [exercicesName, setExercicesName] = useState({
-    0: "firstStep",
-  });
-  const [sets, setSets] = useState([
-    {
-      reps: 0,
-      rest: 0,
-    },
-  ]);
-  const [workoutName, setWorkoutName] = useState("");
-  const [workout, setWorkout] = useState({ name: "", exercices: [] });
   const [activeStep, setActiveStep] = useState(0);
   const [isLastStep, setIsLastStep] = useState(false);
   const [isFirstStep, setIsFirstStep] = useState(false);
 
-  const handleNext = () => {
-    console.log("active step ----", activeStep);
-    console.log(exercicesName[activeStep]);
+  const workoutMutation = useMutation(createWorkout);
+  const [workoutName, setWorkoutName] = useMutation("");
+  const [exercices, setExercices] = useState([]);
+  const [steps, setSteps] = useState(2);
 
-    !isFirstStep &&
-      setWorkout((workoutState) =>
-        workoutState.exercices?.push({
-          name: exercicesName[activeStep],
-          sets: sets,
-        })
-      );
-    console.log("workout -----", workout);
+  const handleNext = () => {
+    if (isFirstStep) {
+      workoutMutation.mutate({ name: workoutName });
+    }
 
     !isLastStep && setActiveStep((cur) => cur + 1);
   };
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
 
   const renderSteppers = () => {
-    const res = Object.keys(exercicesName).map((exKey) => {
-      return (
-        <Step
-          key={exKey}
-          className="h-4 w-4"
-          onClick={() => {
-            setActiveStep(exKey);
-          }}
-        />
-      );
+    const res = Object.keys(exercices).map((exKey) => {
+      return <Step key={exKey} className="h-4 w-4" />;
     });
-    res.push(
-      <Step key={Object.keys(exercicesName)?.length} className="h-4 w-4" />
-    );
+    res.push(<Step key={Object.keys(exercices)?.length} className="h-4 w-4" />);
     return res;
   };
 
   const renderExercicesBody = () => {
-    return Object.entries(exercicesName).map(([key, value]) => {
+    return Object.entries(exercices).map(([key, value]) => {
       key = parseInt(key);
       return (
         activeStep === key + 1 && (
           <ExercicesSteps
             className="h-4 w-4"
             key={key}
-            value={exercicesName[key + 1]}
-            sets={sets}
-            setSets={setSets}
+            value={exercices[key + 1]}
+            exercice="test"
           />
         )
       );
@@ -115,7 +92,7 @@ export function CreateWorkoutDialog(props) {
         <DialogBody className="space-y-4 pb-6 h-[42rem] overflow-y-scroll">
           {isFirstStep && (
             <FirstStep
-              setExercicesName={setExercicesName}
+              setExercicesName={setExercices}
               setWorkoutName={setWorkoutName}
             />
           )}

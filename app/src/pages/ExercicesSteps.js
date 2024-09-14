@@ -1,8 +1,10 @@
 import { Button, Input, Typography } from "@material-tailwind/react";
+import { useState } from "react";
 
 const ExercicesSteps = (props) => {
-  const { value, sets, setSets } = props;
-
+  const { value, exercice } = props;
+  const [sets, setSets] = useState([]);
+  // create exercice here
   const handleInputChange = (index, field, value) => {
     setSets((prevSets) =>
       prevSets.map((set, i) => (i === index ? { ...set, [field]: value } : set))

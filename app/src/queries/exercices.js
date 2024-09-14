@@ -1,21 +1,14 @@
 import { client, CONFIG } from "./axios";
 
-export const getWorkouts = {
+export const getExercices = {
   queryFn: async () => {
     return client
-      .get("workouts", CONFIG)
+      .get("exercices", CONFIG)
       .then((response) => Promise.resolve(response.data))
       .catch((error) => {
         console.error(error);
         return Promise.reject(error);
       });
   },
-  queryKey: ["workouts"],
-};
-
-export const createWorkout = {
-  mutationFn: (workout) => {
-    return client.post("/workouts", workout, CONFIG);
-  },
-  mutationKey: ["workout"],
+  queryKey: ["exercices"],
 };

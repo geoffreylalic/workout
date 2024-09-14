@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input, Typography } from "@material-tailwind/react";
 
 const FirstStep = (props) => {
-  const { setExercicesName = () => {}, setWorkoutName = () => {} } = props;
+  const { setExercices = () => {}, setWorkoutName = () => {} } = props;
   const [exNum, setExNum] = useState(1);
 
   const renderExcericesNames = (exNum) => {
@@ -31,7 +31,7 @@ const FirstStep = (props) => {
               className: "hidden",
             }}
             onChange={(evt) => {
-              setExercicesName((prev) => ({
+              setExercices((prev) => ({
                 ...prev,
                 [index]: evt.target.value,
               }));

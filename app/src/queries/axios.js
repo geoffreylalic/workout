@@ -10,4 +10,5 @@ export const CONFIG = {
 
 export const client = axios.create({
   baseURL: BASE_URL,
+  CONFIG,
 });
