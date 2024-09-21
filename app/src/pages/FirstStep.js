@@ -12,10 +12,13 @@ const FirstStep = (props) => {
   const handleChangeExercices = (value, index) =>
     setExercices(exercices.map((ex, i) => (i === index ? value : ex)));
 
-  const handleChangeNbExercices = (nb) =>
-    nb > exercices.length
-      ? setExercices([...exercices, ""])
-      : setExercices(exercices.slice(0, -1));
+  const handleChangeNbExercices = (nb) => {
+    const newExercices =
+      nb > exercices.length ? [...exercices, ""] : exercices.slice(0, -1);
+    setExercices(newExercices);
+    console.log(newExercices.length);
+    setSteps(newExercices.length + 2);
+  };
 
   const renderExcericesNames = (exNum) => {
     const elements = [];
@@ -101,10 +104,7 @@ const FirstStep = (props) => {
           }}
           required
           value={exercices.length}
-          onChange={(evt) => {
-            handleChangeNbExercices(evt.target.value);
-            setSteps(evt.target.value);
-          }}
+          onChange={(evt) => handleChangeNbExercices(evt.target.value)}
         />
       </div>
       <div className="flex gap-4"></div>

@@ -36,8 +36,6 @@ export function CreateWorkoutDialog(props) {
     !isLastStep && setActiveStep((cur) => cur + 1);
   };
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
-  console.log("steps ----", steps);
-
   const renderSteppers = () => {
     let res = [];
     for (let index = 0; index < steps; index++) {

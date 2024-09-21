@@ -7,10 +7,9 @@ import Calendar from "../../components/Calendar";
 const Workouts = () => {
   const { data, error } = useQuery(getWorkouts);
   const handleAdd = () => {
-    console.log("clicked");
   };
   if (error) {
-    console.log(error);
+    console.error(error);
   }
 
   if (data) {
