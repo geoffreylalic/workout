@@ -2,8 +2,20 @@ import { useState } from "react";
 import { Input, Typography } from "@material-tailwind/react";
 
 const FirstStep = (props) => {
-  const { setExercices = () => {}, setWorkoutName = () => {} } = props;
-  const [exNum, setExNum] = useState(1);
+  const {
+    setExercices = () => {},
+    setWorkoutName = () => {},
+    setSteps = () => {},
+    exercices = [],
+  } = props;
+
+  const handleChangeExercices = (value, index) =>
+    setExercices(exercices.map((ex, i) => (i === index ? value : ex)));
+
+  const handleChangeNbExercices = (nb) =>
+    nb > exercices.length
+      ? setExercices([...exercices, ""])
+      : setExercices(exercices.slice(0, -1));
 
   const renderExcericesNames = (exNum) => {
     const elements = [];
@@ -30,12 +42,9 @@ const FirstStep = (props) => {
             labelProps={{
               className: "hidden",
             }}
-            onChange={(evt) => {
-              setExercices((prev) => ({
-                ...prev,
-                [index]: evt.target.value,
-              }));
-            }}
+            onChange={(evt) =>
+              handleChangeExercices(evt.target.value, index - 1)
+            }
           />
         </div>
       );
@@ -91,13 +100,16 @@ const FirstStep = (props) => {
             className: "hidden",
           }}
           required
-          value={exNum}
-          onChange={(evt) => setExNum(evt.target.value)}
+          value={exercices.length}
+          onChange={(evt) => {
+            handleChangeNbExercices(evt.target.value);
+            setSteps(evt.target.value);
+          }}
         />
       </div>
       <div className="flex gap-4"></div>
 
-      <div>{renderExcericesNames(exNum)}</div>
+      <div>{renderExcericesNames(exercices.length)}</div>
     </div>
   );
 };

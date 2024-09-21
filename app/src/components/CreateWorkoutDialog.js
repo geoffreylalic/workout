@@ -24,7 +24,7 @@ export function CreateWorkoutDialog(props) {
   const [isFirstStep, setIsFirstStep] = useState(false);
 
   const workoutMutation = useMutation(createWorkout);
-  const [workoutName, setWorkoutName] = useMutation("");
+  const [workoutName, setWorkoutName] = useState("");
   const [exercices, setExercices] = useState([]);
   const [steps, setSteps] = useState(2);
 
@@ -36,26 +36,22 @@ export function CreateWorkoutDialog(props) {
     !isLastStep && setActiveStep((cur) => cur + 1);
   };
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
+  console.log("steps ----", steps);
 
   const renderSteppers = () => {
-    const res = Object.keys(exercices).map((exKey) => {
-      return <Step key={exKey} className="h-4 w-4" />;
-    });
-    res.push(<Step key={Object.keys(exercices)?.length} className="h-4 w-4" />);
+    let res = [];
+    for (let index = 0; index < steps; index++) {
+      res.push(<Step key={index} className="h-4 w-4" />);
+    }
     return res;
   };
 
   const renderExercicesBody = () => {
-    return Object.entries(exercices).map(([key, value]) => {
+    return exercices.map(([key, value]) => {
       key = parseInt(key);
       return (
         activeStep === key + 1 && (
-          <ExercicesSteps
-            className="h-4 w-4"
-            key={key}
-            value={exercices[key + 1]}
-            exercice="test"
-          />
+          <ExercicesSteps className="h-4 w-4" key={key} exercice="test" />
         )
       );
     });
@@ -92,7 +88,9 @@ export function CreateWorkoutDialog(props) {
         <DialogBody className="space-y-4 pb-6 h-[42rem] overflow-y-scroll">
           {isFirstStep && (
             <FirstStep
-              setExercicesName={setExercices}
+              setSteps={setSteps}
+              setExercices={setExercices}
+              exercices={exercices}
               setWorkoutName={setWorkoutName}
             />
           )}

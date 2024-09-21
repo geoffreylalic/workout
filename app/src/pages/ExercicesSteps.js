@@ -2,14 +2,9 @@ import { Button, Input, Typography } from "@material-tailwind/react";
 import { useState } from "react";
 
 const ExercicesSteps = (props) => {
-  const { value, exercice } = props;
+  const { exercice, workoutId } = props;
   const [sets, setSets] = useState([]);
-  // create exercice here
-  const handleInputChange = (index, field, value) => {
-    setSets((prevSets) =>
-      prevSets.map((set, i) => (i === index ? { ...set, [field]: value } : set))
-    );
-  };
+  // create exercice here and sets here
 
   const addSet = () => {
     setSets([...sets, { reps: 0, rest: 0 }]);
@@ -50,11 +45,8 @@ const ExercicesSteps = (props) => {
               labelProps={{
                 className: "hidden",
               }}
-              value={set.reps}
               type="number"
-              onChange={(evt) => {
-                handleInputChange(index, "reps", evt.target.value);
-              }}
+              onChange={(evt) => {}}
             />
           </div>
           <div>
@@ -77,11 +69,8 @@ const ExercicesSteps = (props) => {
               labelProps={{
                 className: "hidden",
               }}
-              value={set.rest}
               type="number"
-              onChange={(evt) => {
-                handleInputChange(index, "rest", evt.target.value);
-              }}
+              onChange={(evt) => {}}
             />
           </div>
           <Button className="m-3" onClick={addSet}>
@@ -97,12 +86,7 @@ const ExercicesSteps = (props) => {
     ));
   };
 
-  return (
-    <div>
-      <h1>{value}</h1>
-      {renderRepsAndRest()}
-    </div>
-  );
+  return <div>{renderRepsAndRest()}</div>;
 };
 
 export default ExercicesSteps;
