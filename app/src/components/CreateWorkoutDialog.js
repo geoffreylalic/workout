@@ -15,18 +15,33 @@ import FirstStep from "../pages/FirstStep";
 import ExercicesSteps from "../pages/ExercicesSteps";
 import LastStep from "../pages/LastStep";
 import { useMutation } from "@tanstack/react-query";
-import { createWorkout } from "../queries/workouts";
+import { createWorkoutFn } from "../queries/workouts";
+import { createExerciceWithSetsFn } from "../queries/exercices";
 
 export function CreateWorkoutDialog(props) {
   const { setOpen, open } = props;
   const [activeStep, setActiveStep] = useState(0);
   const [isLastStep, setIsLastStep] = useState(false);
   const [isFirstStep, setIsFirstStep] = useState(false);
-
-  const workoutMutation = useMutation(createWorkout);
   const [workoutName, setWorkoutName] = useState("");
+  const [workoutId, setWorkoutId] = useState(null);
   const [exercices, setExercices] = useState([]);
+  const [currentExercice, setCurrentExercice] = useState(null);
   const [steps, setSteps] = useState(2);
+
+  const workoutMutation = useMutation({
+    mutationFn: createWorkoutFn,
+    onSuccess: (response) => {
+      setWorkoutId(response.data.id);
+    },
+  });
+
+  const exerciceMutation = useMutation({
+    mutationFn: createExerciceWithSetsFn,
+    onSuccess: () => {
+      setCurrentExercice(null);
+    },
+  });
 
   const handleNext = () => {
     if (isFirstStep) {
@@ -34,6 +49,10 @@ export function CreateWorkoutDialog(props) {
     }
 
     !isLastStep && setActiveStep((cur) => cur + 1);
+
+    if (currentExercice) {
+      exerciceMutation.mutate(currentExercice);
+    }
   };
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
   const renderSteppers = () => {
@@ -45,14 +64,18 @@ export function CreateWorkoutDialog(props) {
   };
 
   const renderExercicesBody = () => {
-    return exercices.map(([key, value]) => {
-      key = parseInt(key);
-      return (
-        activeStep === key + 1 && (
-          <ExercicesSteps className="h-4 w-4" key={key} exercice="test" />
+    return exercices.map(
+      (value, key) =>
+        key + 1 === activeStep && (
+          <ExercicesSteps
+            className="h-4 w-4"
+            key={key}
+            exercice={value}
+            workoutId={workoutId}
+            setCurrentExercice={setCurrentExercice}
+          />
         )
-      );
-    });
+    );
   };
 
   return (
@@ -92,7 +115,8 @@ export function CreateWorkoutDialog(props) {
               setWorkoutName={setWorkoutName}
             />
           )}
-          {isLastStep ? <LastStep /> : renderExercicesBody()}
+          {isLastStep && <LastStep />}
+          {!isFirstStep && !isLastStep && renderExercicesBody()}
         </DialogBody>
         <DialogFooter className="flex justify-between">
           <Button onClick={handlePrev} disabled={isFirstStep}>

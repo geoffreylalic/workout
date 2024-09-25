@@ -2,7 +2,11 @@ import { PrismaClient } from "@prisma/client";
 import { Response, NextFunction, Router } from "express";
 import { UserReq } from "../interfaces/request";
 import { bodyValidator } from "../middlewares/bodyValidator";
-import { ExerciceCreate, ExercicePut } from "../validators/exercice";
+import {
+  ExerciceCreate,
+  ExercicePut,
+  ExerciceSetCreate,
+} from "../validators/exercice";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -29,6 +33,39 @@ router.post(
       },
     });
     res.send({ exercice });
+  }
+);
+
+router.post(
+  "/sets",
+  bodyValidator(ExerciceSetCreate),
+  async (req: UserReq, res: Response, next: NextFunction) => {
+    const { name, sets, workoutId } = req.body;
+    try {
+      await prisma.$transaction(async (tx) => {
+        const createdExercice = await tx.exercice.create({
+          data: {
+            userId: req.user.id,
+            name: name,
+            workoutId: workoutId,
+          },
+        });
+        await tx.set.createMany({
+          data: sets.map((set: any) => {
+            return {
+              exerciceId: createdExercice.id,
+              userId: req.user.id,
+              workoutId,
+              ...set,
+            };
+          }),
+        });
+      });
+    } catch (error) {
+      res.status(400).send(error);
+      return;
+    }
+    res.send({ succes: true });
   }
 );
 

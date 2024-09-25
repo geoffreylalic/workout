@@ -11,8 +11,14 @@ export const ExerciceCreate = z.object({
   workoutId: z.number(),
 });
 
+export const ExerciceSetCreate = z.object({
+  name: z.string(),
+  workoutId: z.number(),
+  sets: z.array(SetCreateFull)
+});
+
 export const ExercicePut = z.object({
-  name: z.string()
+  name: z.string(),
 });
 
 export const ExerciceId = z.object({

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Input, Typography } from "@material-tailwind/react";
 
 const FirstStep = (props) => {
@@ -16,7 +15,6 @@ const FirstStep = (props) => {
     const newExercices =
       nb > exercices.length ? [...exercices, ""] : exercices.slice(0, -1);
     setExercices(newExercices);
-    console.log(newExercices.length);
     setSteps(newExercices.length + 2);
   };
 

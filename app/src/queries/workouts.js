@@ -13,9 +13,5 @@ export const getWorkouts = {
   queryKey: ["workouts"],
 };
 
-export const createWorkout = {
-  mutationFn: (workout) => {
-    return client.post("/workouts", workout, CONFIG);
-  },
-  mutationKey: ["workout"],
-};
+export const createWorkoutFn = (workout) =>
+  client.post("/workouts", workout, CONFIG);

@@ -12,3 +12,6 @@ export const getExercices = {
   },
   queryKey: ["exercices"],
 };
+
+export const createExerciceWithSetsFn = (exercice) =>
+  client.post("/exercices/sets", exercice, CONFIG);
