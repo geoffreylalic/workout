@@ -7,6 +7,7 @@ import {
   ExercicePut,
   ExerciceSetCreate,
 } from "../validators/exercice";
+import { timeToDatetime } from "../validators/set";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -50,22 +51,24 @@ router.post(
             workoutId: workoutId,
           },
         });
+
         await tx.set.createMany({
           data: sets.map((set: any) => {
+            set.rest = timeToDatetime.parse(set.rest);
             return {
               exerciceId: createdExercice.id,
               userId: req.user.id,
-              workoutId,
               ...set,
             };
           }),
         });
+        res.send(createdExercice);
       });
     } catch (error) {
+      console.error(error);
       res.status(400).send(error);
       return;
     }
-    res.send({ succes: true });
   }
 );
 

@@ -7,7 +7,7 @@ dayjs.extend(utc);
 export const SetCreateFull = z.object({
   repetitions: z.number(),
   weight: z.number(),
-  rest: z.string().datetime(),
+  rest: z.string(),
 });
 
 export const timeToDatetime = z.string().transform((val) => {
