@@ -31,7 +31,6 @@ const ExercicesSteps = (props) => {
             ? parseInt(value)
             : value;
         if (index === i) set[attribute] = value;
-        console.log(set);
         return set;
       });
       setCurrentExercice({
