@@ -42,7 +42,7 @@ const ExercicesSteps = (props) => {
     });
   };
 
-  const renderrepetitionsAndRest = () => {
+  const renderRepetitionsAndRest = () => {
     return sets.map((set, index) => (
       <div key={index} className="pt-3">
         <h1>{exercice}</h1>
@@ -145,7 +145,7 @@ const ExercicesSteps = (props) => {
     ));
   };
 
-  return <div>{renderrepetitionsAndRest()}</div>;
+  return <div>{renderRepetitionsAndRest()}</div>;
 };
 
 export default ExercicesSteps;
