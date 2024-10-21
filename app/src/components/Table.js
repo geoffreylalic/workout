@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 export function Table(props) {
   const { data = [], headers = [], attributes = [], view = null } = props;
-  console.log("🚀 ~ Table ~ data:", data);
   const navigate = useNavigate();
   return (
     <Card className="h-full w-full overflow-scroll">

@@ -51,8 +51,6 @@ export function CreateWorkoutDialog(props) {
     !isLastStep && setActiveStep((cur) => cur + 1);
 
     if (currentExercice) {
-      console.log(currentExercice, "ok");
-
       exerciceMutation.mutate(currentExercice);
     }
   };

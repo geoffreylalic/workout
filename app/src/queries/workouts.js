@@ -16,8 +16,6 @@ export const getWorkouts = {
 export const getWorkout = (id) => {
   return {
     queryFn: async () => {
-      console.log("id ----", id);
-
       return client
         .get(`workouts/${id}`, CONFIG)
         .then((response) => Promise.resolve(response.data))
