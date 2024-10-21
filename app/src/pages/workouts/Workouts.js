@@ -14,10 +14,15 @@ const Workouts = () => {
 
   if (data) {
     return (
-      <div className="mx-auto">
+      <div className="pl-5 pt-5">
         <div className="justify-between grid grid-cols-5 gap-10"></div>
-        <Calendar addName="add workout  " onClickAdd={handleAdd} />
-        <Table data={data} />
+        {/* <Calendar addName="add workout  " onClickAdd={handleAdd} /> */}
+        <Table
+          data={data}
+          attributes={["name", "createdAt", "id"]}
+          headers={["name", "Date creation", "id", "action"]}
+          view="id"
+        />
       </div>
     );
   }

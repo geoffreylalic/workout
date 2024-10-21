@@ -13,5 +13,22 @@ export const getWorkouts = {
   queryKey: ["workouts"],
 };
 
+export const getWorkout = (id) => {
+  return {
+    queryFn: async () => {
+      console.log("id ----", id);
+
+      return client
+        .get(`workouts/${id}`, CONFIG)
+        .then((response) => Promise.resolve(response.data))
+        .catch((error) => {
+          console.error(error);
+          return Promise.reject(error);
+        });
+    },
+    queryKey: ["workouts", id],
+  };
+};
+
 export const createWorkoutFn = (workout) =>
   client.post("/workouts", workout, CONFIG);

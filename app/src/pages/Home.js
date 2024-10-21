@@ -1,5 +1,4 @@
 import React from "react";
-import Workouts from "./workouts/Workouts";
 import { Button, Typography } from "@material-tailwind/react";
 const Home = () => {
   return (
@@ -10,7 +9,6 @@ const Home = () => {
         </div>
         <Button>Add workout</Button>
       </div>
-      <Workouts />
     </div>
   );
 };

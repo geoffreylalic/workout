@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login, Home, Workouts } from "./pages";
+import { Login, Home, Workouts, Workout } from "./pages";
 import { SideBar } from "./components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@material-tailwind/react";
@@ -16,7 +16,11 @@ const router = createBrowserRouter([
     element: <SideBar />,
     children: [
       { path: "", element: <Home /> },
-      { path: "workouts", element: <Workouts /> },
+      {
+        path: "workouts",
+        element: <Workouts />,
+      },
+      { path: "workouts/:exerciceId", element: <Workout /> },
     ],
   },
   {

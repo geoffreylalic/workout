@@ -1,12 +1,12 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { Request, Response, NextFunction, Router } from "express";
+import { PrismaClient } from "@prisma/client";
+import { NextFunction, Response, Router } from "express";
 import { UserReq } from "../interfaces/request";
+import { bodyValidator } from "../middlewares/bodyValidator";
 import {
   WorkoutCreate,
   WorkoutCreateFull,
   WorkoutUpdate,
 } from "../validators/workout";
-import { bodyValidator } from "../middlewares/bodyValidator";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -19,6 +19,26 @@ router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
   });
   res.status(200).send(workouts);
   return;
+});
+
+router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
+  const workoutId = parseInt(req.params.id);
+  try {
+    const workout = await prisma.workout.findUnique({
+      where: {
+        id: workoutId,
+        createdBy: req.user,
+      },
+      include: {
+        exercices: {
+          include: { sets: true },
+        },
+      },
+    });
+    res.status(200).send(workout);
+  } catch (error) {
+    res.status(400).send({ error: error });
+  }
 });
 
 router.post(

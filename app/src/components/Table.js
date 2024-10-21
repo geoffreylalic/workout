@@ -1,17 +1,18 @@
 import { Card, Typography } from "@material-tailwind/react";
-
-const TABLE_HEAD = ["name", "created_at", "id"];
+import { useNavigate } from "react-router-dom";
 
 export function Table(props) {
-  const { data } = props;
+  const { data = [], headers = [], attributes = [], view = null } = props;
+  console.log("🚀 ~ Table ~ data:", data);
+  const navigate = useNavigate();
   return (
     <Card className="h-full w-full overflow-scroll">
       <table className="w-full min-w-max table-auto text-left">
         <thead>
           <tr>
-            {TABLE_HEAD.map((head) => (
+            {headers.map((head, id) => (
               <th
-                key={head}
+                key={id}
                 className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
               >
                 <Typography
@@ -26,50 +27,39 @@ export function Table(props) {
           </tr>
         </thead>
         <tbody>
-          {data.map(({ name, created_at, id }, index) => {
+          {data.map((elem, index) => {
             const isLast = index === data.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
             return (
-              <tr key={name}>
-                <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
+              <tr key={index}>
+                {attributes.map((attribute, index) => {
+                  return (
+                    <td key={index} className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {elem[attribute]}
+                      </Typography>
+                    </td>
+                  );
+                })}
+                {view && (
+                  <td
+                    key={index}
+                    className={classes}
+                    onClick={() => navigate(`${elem[view]}`)}
                   >
-                    {name}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {created_at}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {id}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    as="a"
-                    href="#"
-                    variant="small"
-                    color="blue-gray"
-                    className="font-medium"
-                  >
-                    View
-                  </Typography>
-                </td>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      View
+                    </Typography>
+                  </td>
+                )}
               </tr>
             );
           })}

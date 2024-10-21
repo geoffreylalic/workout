@@ -1,7 +1,8 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const SideBar = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex">
       <div className="flex h-screen w-16 flex-col justify-between border-e bg-white">
@@ -48,7 +49,7 @@ const SideBar = () => {
               <ul className="space-y-1 border-t border-gray-100 pt-4">
                 <li>
                   <a
-                    href="#"
+                    onClick={() => navigate("/workouts")}
                     className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                   >
                     <svg
