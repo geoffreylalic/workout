@@ -3,7 +3,7 @@ import { bodyValidator } from "../middlewares/bodyValidator";
 import { UserCreate, UserWithoutPassword } from "../validators/user";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -56,6 +56,29 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 
   res.status(400).send({ error: "User not found." });
+});
+
+router.get("/me", async (req: Request, res: Response) => {
+  const authToken = req.headers.authorization?.split("Bearer ")[1];
+  if (!authToken) {
+    res.status(404).send({ error: "User not found." });
+    return;
+  }
+  try {
+    const payload = jwt.verify(
+      authToken as string,
+      process.env.AUTH_SECRET as Secret
+    ) as JwtPayload;
+    const user = await prisma.user.findUnique({
+      where: { id: payload.id },
+      select: UserWithoutPassword,
+    });
+    res.status(200).send(user);
+    return;
+  } catch (error) {
+    res.status(401).send({ error: error });
+    return;
+  }
 });
 
 export default router;
