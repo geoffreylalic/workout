@@ -7,6 +7,7 @@ import { Login, Home, Workouts, Workout } from "./pages";
 import { SideBar } from "./components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@material-tailwind/react";
+import AuthProvider from "./contexts/AuthProvider";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +35,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>
