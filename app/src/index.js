@@ -7,14 +7,19 @@ import { Login, Home, Workouts, Workout } from "./pages";
 import { SideBar } from "./components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@material-tailwind/react";
-import AuthProvider from "./contexts/AuthProvider";
+import AuthProvider from "./contexts/auth/AuthProvider";
+import AuthGard from "./pages/AuthGard";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <SideBar />,
+    element: (
+      <AuthGard>
+        <SideBar />
+      </AuthGard>
+    ),
     children: [
       { path: "", element: <Home /> },
       {

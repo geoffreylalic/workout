@@ -15,4 +15,5 @@ export const me = {
       });
   },
   queryKey: ["auth/me"],
+  retry: false,
 };
