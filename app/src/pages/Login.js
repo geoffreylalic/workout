@@ -11,7 +11,7 @@ const Login = () => {
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       localStorage.setItem("accessToken", response.data.accessToken);
-      navigate("/");
+      navigate("/workouts");
     },
   });
 
