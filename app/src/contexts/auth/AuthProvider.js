@@ -7,6 +7,9 @@ const AuthProvider = ({ children }) => {
   const { isSuccess, isError, isLoading } = useQuery(me);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setIsAuthenticated(true);
+    }
     if (isSuccess) {
       setIsAuthenticated(true);
       return;
