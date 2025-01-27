@@ -31,9 +31,17 @@ const Workouts = () => {
           <Table
             data={data}
             attributes={["name", "createdAt", "id"]}
-            headers={["name", "Date creation", "id", "action", 'delete']}
-            view="id"
-            del="id"
+            headers={[
+              "name",
+              "Date creation",
+              "id",
+              "action",
+              "delete",
+              "update",
+            ]}
+            view
+            del
+            update
           />
           <CreateWorkoutDialog open={open} setOpen={setOpen} />
         </div>

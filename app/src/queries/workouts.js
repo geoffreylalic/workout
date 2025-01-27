@@ -33,3 +33,6 @@ export const createWorkoutFn = (workout) =>
 
 export const deleteWorkoutFn = (workoutId) =>
   client.delete(`/workouts/${workoutId}`, CONFIG);
+
+export const updateWorkoutFn = (workoutId, body) =>
+  client.put(`/workouts/${workoutId}`, body, CONFIG);

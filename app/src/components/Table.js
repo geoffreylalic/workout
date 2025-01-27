@@ -3,18 +3,21 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { DeleteDialog } from "./DeleteDialog";
 import { useState } from "react";
 import { checkElementType } from "../utils";
+import { UpdateWorkoutDialog } from "./UpdateWorkoutDialog";
 
 export function Table(props) {
   const {
     data = [],
     headers = [],
     attributes = [],
-    view = null,
-    del = null,
+    view = false,
+    del = false,
+    update = false,
   } = props;
   const navigate = useNavigate();
   const location = useLocation();
   const [openDelete, setOpenDelete] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
   const [element, setElement] = useState(null);
   const [elementType, setElementType] = useState(null);
   return (
@@ -94,6 +97,25 @@ export function Table(props) {
                       </Typography>
                     </td>
                   )}
+                  {update && (
+                    <td
+                      key={"update" + index}
+                      className={classes}
+                      onClick={() => {
+                        setElement(elem);
+                        setElementType(checkElementType(location.pathname));
+                        setOpenUpdate(true);
+                      }}
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        Update
+                      </Typography>
+                    </td>
+                  )}
                 </tr>
               );
             })}
@@ -106,6 +128,13 @@ export function Table(props) {
           setOpen={setOpenDelete}
           element={element}
           elementType={elementType}
+        />
+      )}
+      {elementType && (
+        <UpdateWorkoutDialog
+          open={openUpdate}
+          setOpen={setOpenUpdate}
+          element={element}
         />
       )}
     </div>
