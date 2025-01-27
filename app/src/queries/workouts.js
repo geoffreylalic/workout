@@ -30,3 +30,6 @@ export const getWorkout = (id) => {
 
 export const createWorkoutFn = (workout) =>
   client.post("/workouts", workout, CONFIG);
+
+export const deleteWorkoutFn = (workoutId) =>
+  client.delete(`/workouts/${workoutId}`, CONFIG);

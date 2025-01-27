@@ -12,3 +12,12 @@ export const MONTHS = {
   11: "November",
   12: "December",
 };
+
+export const checkElementType = (url) =>
+  url.includes("workouts")
+    ? "workouts"
+    : url.includes("exercices")
+    ? "exercices"
+    : url.includes("sets")
+    ? "sets"
+    : null;
