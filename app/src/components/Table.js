@@ -67,7 +67,9 @@ export function Table(props) {
                     <td
                       key={index}
                       className={classes}
-                      onClick={() => navigate(`${elem[view]}`)}
+                      onClick={() => {
+                        navigate(`${elem["id"]}`);
+                      }}
                     >
                       <Typography
                         variant="small"
