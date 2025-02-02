@@ -50,14 +50,14 @@ const Workout = () => {
           <Typography variant="h3" color="blue-gray">
             {data.name}
           </Typography>
-          <Typography variant="div" color="blue-gray">
+          <Typography color="blue-gray">
             {createdAt}
           </Typography>
         </div>
 
         {data.exercices.length > 0 &&
           data.exercices?.map((exercice, index) => (
-            <section key={index}>
+            <section key={'ex'+index}>
               <Card className="h-full w-full">
                 <CardHeader
                   floated={false}
@@ -110,8 +110,8 @@ const Workout = () => {
                             ? "!p-4"
                             : "!p-4 border-b border-gray-300";
                           return (
-                            <tr key={index}>
-                              <td className={classes} key={index}>
+                            <tr key={'set'+index}>
+                              <td className={classes}>
                                 <Typography
                                   variant="small"
                                   className="!font-normal text-gray-600 text-left"
@@ -119,7 +119,7 @@ const Workout = () => {
                                   {index + 1}
                                 </Typography>
                               </td>
-                              <td className={classes} key={index}>
+                              <td className={classes}>
                                 <Typography
                                   variant="small"
                                   className="!font-normal text-gray-600 text-right"
@@ -127,7 +127,7 @@ const Workout = () => {
                                   {repetitions}
                                 </Typography>
                               </td>
-                              <td className={classes} key={index}>
+                              <td className={classes}>
                                 <Typography
                                   variant="small"
                                   className="!font-normal text-gray-600 text-right"
@@ -135,7 +135,7 @@ const Workout = () => {
                                   {weight}
                                 </Typography>
                               </td>
-                              <td className={classes} key={index}>
+                              <td className={classes}>
                                 <Typography
                                   variant="small"
                                   className="!font-normal text-gray-600 text-right"
