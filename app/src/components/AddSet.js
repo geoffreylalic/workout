@@ -1,6 +1,12 @@
-import { CheckIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  CheckIcon,
+  PlusCircleIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import { IconButton, Input } from "@material-tailwind/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { createSetFn } from "../queries/set";
 
 function AddSet(props) {
   const { exerciceId } = props;
@@ -9,13 +15,21 @@ function AddSet(props) {
   const [repetitions, setRepetitions] = useState(null);
   const [weight, setWeight] = useState(null);
   const [rest, setRest] = useState(null);
+
+  const queryClient = useQueryClient();
+
+  const addSetMutation = useMutation({
+    mutationFn: createSetFn,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ["workouts", "exercices", "sets"],
+      });
+    },
+  });
+
   const RenderAddButton = () => (
     <tr>
-      <td
-        colSpan={5}
-        className="p-4"
-        onClick={() => setIsAdded(true)}
-      >
+      <td colSpan={5} className="p-4" onClick={() => setIsAdded(true)}>
         <div className="flex justify-center">
           <PlusCircleIcon className="h-5 w-5 text-gray-900 " />
         </div>
@@ -49,6 +63,12 @@ function AddSet(props) {
           variant="text"
           size="sm"
           onClick={() => {
+            addSetMutation.mutate({
+              repetitions: 1,
+              weight: 1,
+              rest: "23:00",
+              exerciceId: exerciceId,
+            });
             setIsAdded(false);
           }}
         >
