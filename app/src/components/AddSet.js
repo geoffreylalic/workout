@@ -1,5 +1,5 @@
-import { CheckIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { IconButton, Input, Typography } from "@material-tailwind/react";
+import { CheckIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { IconButton, Input } from "@material-tailwind/react";
 import React, { useState } from "react";
 
 function AddSet(props) {
@@ -13,11 +13,11 @@ function AddSet(props) {
     <tr>
       <td
         colSpan={5}
-        className="bg-blue-gray-500 !p-4"
+        className="p-4"
         onClick={() => setIsAdded(true)}
       >
         <div className="flex justify-center">
-          <PlusIcon className="h-5 w-5 text-gray-900 " />
+          <PlusCircleIcon className="h-5 w-5 text-gray-900 " />
         </div>
       </td>
     </tr>
