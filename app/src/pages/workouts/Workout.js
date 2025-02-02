@@ -106,7 +106,6 @@ const Workout = () => {
                     <tbody>
                       {exercice.sets?.map(
                         ({ repetitions, weight, rest }, index) => {
-                          const isLast = index === data.exercices?.length - 1;
                           const classes = "!p-4 border-b border-gray-300";
                           return (
                             <tr key={"set" + index}>
@@ -153,7 +152,7 @@ const Workout = () => {
                           );
                         }
                       )}
-                      <AddSet />
+                      <AddSet exerciceId={exercice.id}/>
                     </tbody>
                   </table>
                 </CardBody>
