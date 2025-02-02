@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getWorkout } from "../../queries/workouts";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
 import {
   Button,
   Typography,
@@ -19,7 +18,7 @@ import {
 const TABLE_HEAD = [
   {
     head: "Position",
-    customeStyle: "!text-left",
+    customeStyle: "text-left",
   },
   {
     head: "Répetitions",
@@ -42,15 +41,20 @@ const TABLE_HEAD = [
 const Workout = () => {
   const { workoutId } = useParams();
   const { data } = useQuery(getWorkout(workoutId));
-  const [openAddEx, setOpenAddEx] = useState(false);
 
   if (data) {
     const createdAt = new Date(data.createdAt).toLocaleString();
     return (
       <div className="m-10">
-        <Typography variant="h3" color="blue-gray" className="pb-5">
-          {data.name}
-        </Typography>
+        <div className="pb-5">
+          <Typography variant="h3" color="blue-gray">
+            {data.name}
+          </Typography>
+          <Typography variant="div" color="blue-gray">
+            {createdAt}
+          </Typography>
+        </div>
+
         {data.exercices.length > 0 &&
           data.exercices?.map((exercice, index) => (
             <section key={index}>
