@@ -13,7 +13,10 @@ import {
 import {
   DocumentMagnifyingGlassIcon,
   FlagIcon,
+  PlusIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
+import AddSet from "../../components/AddSet";
 
 const TABLE_HEAD = [
   {
@@ -50,14 +53,12 @@ const Workout = () => {
           <Typography variant="h3" color="blue-gray">
             {data.name}
           </Typography>
-          <Typography color="blue-gray">
-            {createdAt}
-          </Typography>
+          <Typography color="blue-gray">{createdAt}</Typography>
         </div>
 
         {data.exercices.length > 0 &&
           data.exercices?.map((exercice, index) => (
-            <section key={'ex'+index}>
+            <section key={"ex" + index}>
               <Card className="h-full w-full">
                 <CardHeader
                   floated={false}
@@ -106,11 +107,9 @@ const Workout = () => {
                       {exercice.sets?.map(
                         ({ repetitions, weight, rest }, index) => {
                           const isLast = index === data.exercices?.length - 1;
-                          const classes = isLast
-                            ? "!p-4"
-                            : "!p-4 border-b border-gray-300";
+                          const classes = "!p-4 border-b border-gray-300";
                           return (
-                            <tr key={'set'+index}>
+                            <tr key={"set" + index}>
                               <td className={classes}>
                                 <Typography
                                   variant="small"
@@ -146,10 +145,7 @@ const Workout = () => {
                               <td className={classes}>
                                 <div className="flex justify-end gap-4">
                                   <IconButton variant="text" size="sm">
-                                    <DocumentMagnifyingGlassIcon className="h-5 w-5 text-gray-900" />
-                                  </IconButton>
-                                  <IconButton variant="text" size="sm">
-                                    <FlagIcon className="h-5 w-5 text-gray-900" />
+                                    <TrashIcon className="h-5 w-5 text-gray-900" />
                                   </IconButton>
                                 </div>
                               </td>
@@ -157,6 +153,7 @@ const Workout = () => {
                           );
                         }
                       )}
+                      <AddSet />
                     </tbody>
                   </table>
                 </CardBody>
