@@ -4,7 +4,6 @@ import React, { useState } from "react";
 
 const EditSet = (props) => {
   const { mutation, exerciceId, setIsOpen, mode, setId } = props;
-  console.log("🚀 ~ EditSet ~ setId:", setId)
   const [position, setPostion] = useState(null);
   const [repetitions, setRepetitions] = useState(null);
   const [weight, setWeight] = useState(null);
@@ -24,7 +23,7 @@ const EditSet = (props) => {
         onChange={(evt) => {
           setHandler(evt.target.value);
         }}
-        value={value === null ? "" : value}
+        value={value}
       />
     );
   };
@@ -46,9 +45,9 @@ const EditSet = (props) => {
                   }
                 : mode === "put"
                 ? {
-                    repetitions: 5,
+                    repetitions: parseInt(repetitions),
+                    weight: parseInt(weight),
                     rest: "10:00",
-                    weight: 34,
                     id: setId,
                   }
                 : null
