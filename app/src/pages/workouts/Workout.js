@@ -11,9 +11,6 @@ import {
 } from "@material-tailwind/react";
 
 import {
-  DocumentMagnifyingGlassIcon,
-  FlagIcon,
-  PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import AddSet from "../../components/AddSet";
