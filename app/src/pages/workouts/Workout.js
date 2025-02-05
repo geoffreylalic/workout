@@ -7,13 +7,10 @@ import {
   Card,
   CardHeader,
   CardBody,
-  IconButton,
 } from "@material-tailwind/react";
 
-import {
-  TrashIcon,
-} from "@heroicons/react/24/solid";
 import AddSet from "../../components/AddSet";
+import LineSet from "../../components/LineSet";
 
 const TABLE_HEAD = [
   {
@@ -102,54 +99,22 @@ const Workout = () => {
                     </thead>
                     <tbody>
                       {exercice.sets?.map(
-                        ({ repetitions, weight, rest }, index) => {
-                          const classes = "!p-4 border-b border-gray-300";
-                          return (
-                            <tr key={"set" + index}>
-                              <td className={classes}>
-                                <Typography
-                                  variant="small"
-                                  className="!font-normal text-gray-600 text-left"
-                                >
-                                  {index + 1}
-                                </Typography>
-                              </td>
-                              <td className={classes}>
-                                <Typography
-                                  variant="small"
-                                  className="!font-normal text-gray-600 text-right"
-                                >
-                                  {repetitions}
-                                </Typography>
-                              </td>
-                              <td className={classes}>
-                                <Typography
-                                  variant="small"
-                                  className="!font-normal text-gray-600 text-right"
-                                >
-                                  {weight}
-                                </Typography>
-                              </td>
-                              <td className={classes}>
-                                <Typography
-                                  variant="small"
-                                  className="!font-normal text-gray-600 text-right"
-                                >
-                                  {rest}
-                                </Typography>
-                              </td>
-                              <td className={classes}>
-                                <div className="flex justify-end gap-4">
-                                  <IconButton variant="text" size="sm">
-                                    <TrashIcon className="h-5 w-5 text-gray-900" />
-                                  </IconButton>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        }
+                        (
+                          { repetitions, weight, rest, exerciceId, id },
+                          index
+                        ) => (
+                          <LineSet
+                            exerciceId={exerciceId}
+                            repetitions={repetitions}
+                            weight={weight}
+                            rest={rest}
+                            index={index}
+                            setId={id}
+                            key={index}
+                          />
+                        )
                       )}
-                      <AddSet exerciceId={exercice.id}/>
+                      <AddSet exerciceId={exercice.id} />
                     </tbody>
                   </table>
                 </CardBody>
