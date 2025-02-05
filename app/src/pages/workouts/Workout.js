@@ -59,7 +59,7 @@ const Workout = () => {
         {data.exercices.length > 0 &&
           data.exercices?.map((exercice, index) => (
             <section key={"ex" + index}>
-              <Card className="h-full w-full">
+              <Card className="h-full w-full mb-10">
                 <CardHeader
                   floated={false}
                   shadow={false}
@@ -83,7 +83,7 @@ const Workout = () => {
                     Delete
                   </Button>
                 </CardHeader>
-                <CardBody className="overflow-scroll !px-0 py-2">
+                <CardBody className="">
                   <table className="w-full min-w-max table-auto">
                     <thead>
                       <tr>
