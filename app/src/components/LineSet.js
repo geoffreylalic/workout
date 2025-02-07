@@ -2,7 +2,7 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { IconButton, Typography } from "@material-tailwind/react";
 import React, { useState } from "react";
 import EditSet from "./EditSet";
-import { putSetFn } from "../queries/set";
+import { deleteSetFn, putSetFn } from "../queries/set";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function LineSet(props) {
@@ -14,6 +14,15 @@ function LineSet(props) {
 
   const putSetMutation = useMutation({
     mutationFn: putSetFn,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ["workouts", "exercices", "sets"],
+      });
+    },
+  });
+
+  const deleteSetMutation = useMutation({
+    mutationFn: deleteSetFn,
     onSuccess: (response) => {
       queryClient.invalidateQueries({
         queryKey: ["workouts", "exercices", "sets"],
@@ -73,7 +82,11 @@ function LineSet(props) {
             <IconButton onClick={() => setIsOpen(true)}>
               <PencilIcon className="h-5 w-5" />
             </IconButton>
-            <IconButton variant="text" size="sm">
+            <IconButton
+              variant="text"
+              size="sm"
+              onClick={() => deleteSetMutation.mutate(setId)}
+            >
               <TrashIcon className="h-5 w-5 text-gray-900" />
             </IconButton>
           </div>
