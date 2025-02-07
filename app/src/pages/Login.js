@@ -10,8 +10,8 @@ const Login = () => {
     mutationFn: (data) => login(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-      localStorage.setItem("accessToken", response.data.accessToken);
       navigate("/workouts");
+      localStorage.setItem("accessToken", response.data.accessToken);
     },
   });
 
