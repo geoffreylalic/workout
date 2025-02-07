@@ -11,6 +11,7 @@ import {
 
 import AddSet from "../../components/AddSet";
 import LineSet from "../../components/LineSet";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
 const TABLE_HEAD = [
   {
@@ -121,6 +122,17 @@ const Workout = () => {
               </Card>
             </section>
           ))}
+        <div className="flex justify-center">
+          <Button
+            variant="text"
+            size="sm"
+            className="flex items-center"
+            onClick={() => {}}
+          >
+            <div className="mr-1">Add exercices</div>
+            <CheckCircleIcon className="w-5 h-5 text-gray-900" />
+          </Button>
+        </div>
       </div>
     );
   }
