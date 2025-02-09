@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getWorkout } from "../../queries/workouts";
 import { useParams } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import LineSet from "../../components/LineSet";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import AddExercice from "../../components/AddExercice";
+import { deleteExerciceFn } from "../../queries/exercices";
 
 const TABLE_HEAD = [
   {
@@ -42,6 +43,14 @@ const Workout = () => {
   const { workoutId } = useParams();
   const { data } = useQuery(getWorkout(workoutId));
   const [newEx, setNewEx] = useState(false);
+
+  const queryClient = useQueryClient();
+  const deleteExerciceMutation = useMutation({
+    mutationFn: deleteExerciceFn,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["workouts", "exercices"] });
+    },
+  });
 
   if (data) {
     const createdAt = new Date(data.createdAt).toLocaleString();
@@ -77,6 +86,7 @@ const Workout = () => {
                   <Button
                     variant="outlined"
                     className="flex items-center gap-2"
+                    onClick={() => deleteExerciceMutation.mutate(exercice.id)}
                   >
                     Delete
                   </Button>
