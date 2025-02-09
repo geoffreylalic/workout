@@ -18,3 +18,6 @@ export const createExerciceFn = (exercice) =>
 
 export const createExerciceWithSetsFn = (exercice) =>
   client.post("/exercices/sets", exercice, CONFIG);
+
+export const deleteExerciceFn = (id) =>
+  client.delete("/exercices/" + id, CONFIG);
