@@ -12,6 +12,8 @@ import {
 import AddSet from "../../components/AddSet";
 import LineSet from "../../components/LineSet";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import AddExercice from "../../components/AddExercice";
 
 const TABLE_HEAD = [
   {
@@ -39,6 +41,7 @@ const TABLE_HEAD = [
 const Workout = () => {
   const { workoutId } = useParams();
   const { data } = useQuery(getWorkout(workoutId));
+  const [newEx, setNewEx] = useState(false);
 
   if (data) {
     const createdAt = new Date(data.createdAt).toLocaleString();
@@ -122,17 +125,23 @@ const Workout = () => {
               </Card>
             </section>
           ))}
-        <div className="flex justify-center">
-          <Button
-            variant="text"
-            size="sm"
-            className="flex items-center"
-            onClick={() => {}}
-          >
-            <div className="mr-1">Add exercices</div>
-            <CheckCircleIcon className="w-5 h-5 text-gray-900" />
-          </Button>
-        </div>
+        {newEx ? (
+          <AddExercice setNewEx={setNewEx} />
+        ) : (
+          <div className="flex justify-center">
+            <Button
+              variant="text"
+              size="sm"
+              className="flex items-center"
+              onClick={() => {
+                setNewEx(true);
+              }}
+            >
+              <div className="mr-1">Add exercices</div>
+              <CheckCircleIcon className="w-5 h-5 text-gray-900" />
+            </Button>
+          </div>
+        )}
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { IconButton, Input } from "@material-tailwind/react";
 import React, { useState } from "react";
+import CustomInput from "./CustomInput";
 
 const EditSet = (props) => {
   const { mutation, exerciceId, setIsOpen, mode, setId } = props;
@@ -8,25 +9,6 @@ const EditSet = (props) => {
   const [repetitions, setRepetitions] = useState(null);
   const [weight, setWeight] = useState(null);
   const [rest, setRest] = useState(null);
-
-  const CustomInput = (params) => {
-    const { placeholder, setHandler, value } = params;
-    return (
-      <Input
-        maxLength={2}
-        placeholder={placeholder}
-        className="appearance-none !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none text-left"
-        labelProps={{
-          className: "before:content-none after:content-none",
-        }}
-        type="number"
-        onChange={(evt) => {
-          setHandler(evt.target.value);
-        }}
-        value={value}
-      />
-    );
-  };
 
   const RenderCheckIcon = () => {
     if (position && repetitions && weight && rest) {
