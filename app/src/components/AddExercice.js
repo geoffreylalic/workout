@@ -56,7 +56,7 @@ const AddExercice = (props) => {
               className="flex items-center gap-2"
               onClick={() => setNewEx(false)}
             >
-              Delete
+              Cancel
             </Button>
           </div>
         </CardHeader>
