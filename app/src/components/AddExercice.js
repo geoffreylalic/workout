@@ -7,11 +7,29 @@ import {
 } from "@material-tailwind/react";
 import React, { useState } from "react";
 import CustomInput from "./CustomInput";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createExerciceFn } from "../queries/exercices";
 
 const AddExercice = (props) => {
-  const { setNewEx = () => {} } = props;
-  const [exerciceName, setExerciceName] = useState();
-  const [description, setDescription] = useState();
+  const { setNewEx = () => {}, workoutId } = props;
+
+  const [exerciceName, setExerciceName] = useState(null);
+  const [description, setDescription] = useState(null);
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: createExerciceFn,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["workouts", "exercices"] });
+      setNewEx(false);
+    },
+  });
+
+  const bodyCreateExercice = {
+    name: exerciceName,
+    description: description,
+    workoutId: parseInt(workoutId),
+  };
 
   return (
     <section>
@@ -28,8 +46,8 @@ const AddExercice = (props) => {
             <Button
               variant="outlined"
               className="flex items-center gap-2 mr-1"
-              disabled
-              onClick={() => setNewEx(false)}
+              disabled={!exerciceName}
+              onClick={() => mutation.mutate(bodyCreateExercice)}
             >
               Validate
             </Button>

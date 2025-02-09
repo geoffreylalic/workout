@@ -126,7 +126,7 @@ const Workout = () => {
             </section>
           ))}
         {newEx ? (
-          <AddExercice setNewEx={setNewEx} />
+          <AddExercice setNewEx={setNewEx} workoutId={workoutId} />
         ) : (
           <div className="flex justify-center">
             <Button
