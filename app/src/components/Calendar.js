@@ -96,24 +96,6 @@ const Calendar = (props) => {
               </svg>
             </button>
           </div>
-          <div className="hidden md:ml-4 md:flex md:items-center">
-            <div className="relative">
-              <div
-                className="absolute right-0 z-10 mt-3 w-36 origin-top-right overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="menu-button"
-              ></div>
-            </div>
-            <div className="ml-6 h-6 w-px bg-gray-300"></div>
-            <Button
-              type="button"
-              className="ml-6 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-              onClick={setOpen}
-            >
-              {addName}
-            </Button>
-          </div>
           <div className="relative ml-6 md:hidden">
             <button
               type="button"
