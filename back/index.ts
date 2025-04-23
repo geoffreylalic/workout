@@ -9,7 +9,10 @@ import sets from "./routes/sets";
 import { authentication } from "./middlewares/auth";
 import cors from "cors";
 
-dotenv.config();
+const env: String = process.env.ENV || "dev";
+const envFile: string = `./.env.${env}`;
+console.log("envFile", envFile);
+dotenv.config({ path: envFile });
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
