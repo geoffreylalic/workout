@@ -1,3 +1,9 @@
+## 0.1.1 (2025-04-23)
+
+### Fix
+
+- **deployement**: deploy on render
+
 ## 0.1.0 (2025-03-12)
 
 ### Feat
