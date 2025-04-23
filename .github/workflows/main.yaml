@@ -23,6 +23,7 @@ jobs:
         with:
           github_token: ${{ secrets.CI_PERSONAL_TOKEN }}
       - name: Apply all pending migrations to the database
+        run: cd back
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
