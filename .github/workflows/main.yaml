@@ -2,8 +2,6 @@ name: Bump version
 
 on:
   push:
-    paths:
-      - prisma/migrations/**
     branches:
       - main
 
@@ -22,10 +20,18 @@ jobs:
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ secrets.CI_PERSONAL_TOKEN }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+      - name: Install dependencies
+        run: npm install
       - name: Apply all pending migrations to the database
-        run: cd back
         run: npx prisma migrate deploy
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}   
 
           
