@@ -21,14 +21,16 @@ jobs:
         with:
           github_token: ${{ secrets.CI_PERSONAL_TOKEN }}
   deploy:
+    name: Deploy back
+    defaults:
+      run:
+        working-directory: back
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Setup Node
         uses: actions/setup-node@v3
-      - name: Change directory
-        run: cd back
       - name: Install dependencies
         run: npm install
       - name: Apply all pending migrations to the database
