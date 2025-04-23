@@ -8,7 +8,8 @@
     "dev": "nodemon index.ts",
     "generate": "npx prisma generate",
     "migrate:dev": "prisma migrate dev",
-    "migrate:test": "dotenv -e .env.dev -- npx prisma migrate dev"
+    "migrate:test": "dotenv -e .env.dev -- npx prisma migrate dev",
+    "build" : "npm install; prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
