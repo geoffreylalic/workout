@@ -1,3 +1,10 @@
+## 0.1.3 (2025-04-24)
+
+### Fix
+
+- **ci**: chose right directory
+- **ci**: change directory for migration
+
 ## 0.1.2 (2025-04-23)
 
 ### Fix
