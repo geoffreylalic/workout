@@ -3,12 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login, Home, Workouts, Workout } from "./pages";
+import { Home, Workouts, Workout } from "./pages";
 import { SideBar } from "./components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@material-tailwind/react";
 import AuthProvider from "./contexts/auth/AuthProvider";
-import AuthGard from "./pages/AuthGard";
 
 const queryClient = new QueryClient();
 
@@ -16,9 +15,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <AuthGard>
         <SideBar />
-      </AuthGard>
     ),
     children: [
       { path: "", element: <Home /> },
@@ -28,10 +25,6 @@ const router = createBrowserRouter([
       },
       { path: "workouts/:workoutId", element: <Workout /> },
     ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
   },
 ]);
 
