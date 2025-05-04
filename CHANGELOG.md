@@ -1,3 +1,13 @@
+## 0.2.0 (2025-05-04)
+
+### Feat
+
+- **production**: handling production environment
+
+### Fix
+
+- **login**: moved login in authentication context
+
 ## 0.1.3 (2025-04-24)
 
 ### Fix
