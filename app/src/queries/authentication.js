@@ -1,19 +1,29 @@
-import { client, CONFIG } from "./axios";
+import { client } from "./axios";
 
-export const login = async (data) => {
+export const loginQuery = async (data) => {
   return Promise.resolve(client.post("/auth/login", data));
 };
 
 export const me = {
+  queryKey: ["me"],
   queryFn: async () => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      throw new Error("No access token");
+    }
+
     return client
-      .get("/auth/me", CONFIG)
-      .then((response) => Promise.resolve(response.data))
+      .get("/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => response.data)
       .catch((error) => {
-        console.error(error);
-        return Promise.reject(error);
+        console.error("Erreur lors de la récupération du profil:", error);
+        throw error;
       });
   },
-  queryKey: ["auth/me"],
   retry: false,
 };
