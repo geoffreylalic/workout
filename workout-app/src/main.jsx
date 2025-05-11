@@ -1,8 +1,7 @@
-import React from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import { Home, Workouts, Workout } from "./pages";
 import { SideBar } from "./components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -28,9 +27,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <StrictMode>
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
@@ -38,10 +36,5 @@ root.render(
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
-  </React.StrictMode>
+  </StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
