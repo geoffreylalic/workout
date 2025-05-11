@@ -1,3 +1,9 @@
+## 0.2.1 (2025-05-11)
+
+### Refactor
+
+- **vite**: migrating to vite
+
 ## 0.2.0 (2025-05-04)
 
 ### Feat
