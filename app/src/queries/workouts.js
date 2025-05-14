@@ -28,8 +28,10 @@ export const getWorkout = (id) => {
   };
 };
 
-export const createWorkoutFn = (workout) =>
-  client.post("/workouts", workout, CONFIG);
+export const createWorkoutFn = async (workout) => {
+  const res = await client.post("/workouts", workout, CONFIG);
+  return res.data;
+};
 
 export const deleteWorkoutFn = (workoutId) =>
   client.delete(`/workouts/${workoutId}`, CONFIG);
