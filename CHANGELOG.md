@@ -1,3 +1,14 @@
+## 0.3.0 (2025-05-14)
+
+### Feat
+
+- **workout**: create workout by name
+
+### Refactor
+
+- **vite**: migrated to vite
+- **vite**: migrating to vite
+
 ## 0.2.0 (2025-05-04)
 
 ### Feat
