@@ -13,19 +13,14 @@ export const getWorkouts = {
   queryKey: ["workouts"],
 };
 
-export const getWorkout = (id) => {
-  return {
-    queryFn: async () => {
-      return client
-        .get(`workouts/${id}`, CONFIG)
-        .then((response) => Promise.resolve(response.data))
-        .catch((error) => {
-          console.error(error);
-          return Promise.reject(error);
-        });
-    },
-    queryKey: ["workouts", id],
-  };
+export const getWorkout = async (id) => {
+  try {
+    const res = await client.get(`workouts/${id}`, CONFIG);
+    return res.data;
+  } catch (error) {
+    console.error("Erreur lors du getWorkout:", error);
+    throw error;
+  }
 };
 
 export const createWorkoutFn = async (workout) => {

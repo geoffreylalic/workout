@@ -18,22 +18,48 @@ router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
   res.status(200).send(sets);
 });
 
+router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
+  const setId = req.params.id;
+  const set = await prisma.set.findFirst({
+    where: {
+      createdBy: req.user,
+      id: parseInt(setId),
+    },
+  });
+  res.status(200).send(set);
+});
+
+// router.post(
+//   "",
+//   bodyValidator(SetCreate),
+//   async (req: UserReq, res: Response, next: NextFunction) => {
+//     const { repetitions, weight, rest, exerciceId } = req.body;
+//     const restDateTime = timeToDatetime.parse(rest);
+//     const exercice = await prisma.set.create({
+//       data: {
+//         repetitions,
+//         weight,
+//         rest: restDateTime,
+//         createdBy: { connect: { id: req.user.id } },
+//         exercice: { connect: { id: exerciceId } },
+//       },
+//     });
+//     res.send({ exercice });
+//   }
+// );
+
 router.post(
   "",
   bodyValidator(SetCreate),
   async (req: UserReq, res: Response, next: NextFunction) => {
-    const { repetitions, weight, rest, exerciceId } = req.body;
-    const restDateTime = timeToDatetime.parse(rest);
-    const exercice = await prisma.set.create({
+    const { exerciceId } = req.body;
+    const set = await prisma.set.create({
       data: {
-        repetitions,
-        weight,
-        rest: restDateTime,
-        createdBy: { connect: { id: req.user.id } },
         exercice: { connect: { id: exerciceId } },
+        createdBy: { connect: { id: req.user.id } },
       },
     });
-    res.send({ exercice });
+    res.send(set);
   }
 );
 

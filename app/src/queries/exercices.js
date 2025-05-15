@@ -13,8 +13,20 @@ export const getExercices = {
   queryKey: ["exercices"],
 };
 
-export const createExerciceFn = (exercice) =>
-  client.post("/exercices/", exercice, CONFIG);
+export const getExercice = async (id) => {
+  try {
+    const res = await client.get(`exercices/${id}`, CONFIG);
+    return res.data;
+  } catch (error) {
+    console.error("Erreur lors du getExercice:", error);
+    throw error;
+  }
+};
+
+export const createExerciceFn = async (exercice) => {
+  const res = await client.post("/exercices", exercice, CONFIG);
+  return res.data;
+};
 
 export const createExerciceWithSetsFn = (exercice) =>
   client.post("/exercices/sets", exercice, CONFIG);

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Set" ALTER COLUMN "repetitions" DROP NOT NULL,
+ALTER COLUMN "weight" DROP NOT NULL,
+ALTER COLUMN "rest" DROP NOT NULL;

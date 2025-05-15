@@ -21,6 +21,20 @@ router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
   res.status(200).send(exercices);
 });
 
+router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
+  const exerciceId = req.params.id;
+  const exercice = await prisma.exercice.findFirst({
+    where: {
+      createdBy: req.user,
+      id: parseInt(exerciceId),
+    },
+    include: {
+      sets: true,
+    },
+  });
+  res.status(200).send(exercice);
+});
+
 router.post(
   "",
   bodyValidator(ExerciceCreate),
@@ -33,7 +47,7 @@ router.post(
         createdBy: { connect: { id: req.user.id } },
       },
     });
-    res.send({ exercice });
+    res.send(exercice);
   }
 );
 
