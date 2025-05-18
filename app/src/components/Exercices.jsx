@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createExerciceFn, getExercice } from "../queries/exercices";
 import { Sets } from "./Sets";
+import CreateSet from "./CreateSet";
 
 const Exercices = ({ workoutId }) => {
   const [exerciceName, setExerciceName] = useState("");
@@ -27,7 +28,7 @@ const Exercices = ({ workoutId }) => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["exercice", exerciceId],
+    queryKey: ["workouts", workoutId, "exercices", exerciceId],
     queryFn: () => getExercice(exerciceId),
     enabled: !!exerciceId,
   });
@@ -35,13 +36,12 @@ const Exercices = ({ workoutId }) => {
   const mutationExercice = useMutation({
     mutationFn: createExerciceFn,
     onSuccess: (data) => {
-      console.log("Nouvel exercice créé :", data);
       setExerciceId(data.id);
-      queryClient.invalidateQueries({ queryKey: ["exercice", data.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["workouts", workoutId, "exercices", data.id],
+      });
     },
   });
-
-  console.log(exerciceData, "exercice data");
 
   return (
     <div className="m-5">
@@ -83,27 +83,19 @@ const Exercices = ({ workoutId }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {exerciceData?.sets?.length > 0 &&
-                exerciceData.sets.map((set, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{set.reps}</TableCell>
-                    <TableCell>{set.weight} kg</TableCell>
-                    <TableCell>{set.rest} sec</TableCell>
+              {exerciceId &&
+                exerciceData?.sets?.length > 0 &&
+                exerciceData?.sets?.map((set, key) => (
+                  <TableRow key={key}>
+                    <Sets set={set} />
                   </TableRow>
                 ))}
             </TableBody>
-            {exerciceData?.sets?.length == 0 && (
-              // <TableFooter className="m-10">
-              //   <TableRow>
-              //     <Sets exerciceId={exerciceId} />
-              //   </TableRow>
-              // </TableFooter>
-              <TableFooter>
-                <TableRow>
-                  <Sets exerciceId={exerciceId} />
-                </TableRow>
-              </TableFooter>
-            )}
+            <TableFooter>
+              <TableRow>
+                <CreateSet workoutId={workoutId} exerciceId={exerciceId} />
+              </TableRow>
+            </TableFooter>
           </Table>
         </>
       )}

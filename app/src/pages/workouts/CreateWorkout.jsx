@@ -27,7 +27,7 @@ export const CreateWorkout = () => {
     mutationFn: createWorkoutFn,
     onSuccess: (data) => {
       setWorkoutId(data.id);
-      queryClient.invalidateQueries({ queryKey: ["workout", data.id] });
+      queryClient.invalidateQueries({ queryKey: ["workouts", data.id] });
     },
   });
 
