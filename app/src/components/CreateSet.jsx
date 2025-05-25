@@ -8,9 +8,9 @@ const CreateSet = ({ workoutId, exerciceId }) => {
 
   const mutationSet = useMutation({
     mutationFn: createSetFn,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["workouts", workoutId, "exercices", exerciceId],
+        queryKey: ["workouts", workoutId],
         refetchType: "active",
       });
     },

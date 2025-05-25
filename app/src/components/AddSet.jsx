@@ -15,8 +15,7 @@ function AddSet(props) {
     onSuccess: (response) => {
       queryClient.invalidateQueries({
         queryKey: ["workouts", "exercices", "sets"],
-      });
-      console.log('response', response)
+      })
     },
     onError: (err) => {
       console.log({'err': err});

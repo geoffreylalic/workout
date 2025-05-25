@@ -3,11 +3,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createWorkoutFn, getWorkout } from "../../queries/workouts";
-import Exercices from "../../components/Exercices";
+import Exercice from "../../components/Exercice";
+import CreateExercice from "../../components/CreateExercice";
 
 export const CreateWorkout = () => {
   const [workoutName, setWorkoutName] = useState("");
-  const [workoutId, setWorkoutId] = useState(48);
+  const [workoutId, setWorkoutId] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -16,12 +17,10 @@ export const CreateWorkout = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["workout", workoutId],
+    queryKey: ["workouts", workoutId],
     queryFn: () => getWorkout(workoutId),
     enabled: !!workoutId,
   });
-
-  console.log("workoutData", workoutData);
 
   const mutationWorkout = useMutation({
     mutationFn: createWorkoutFn,
@@ -57,11 +56,15 @@ export const CreateWorkout = () => {
 
       {isLoading && <p>Chargement du workout...</p>}
       {isError && <p>Erreur lors du chargement du workout.</p>}
-      {workoutData && (
-        <div>
-          <Exercices workoutId={workoutId} />
-        </div>
-      )}
+      <div>
+        {workoutData &&
+          workoutData?.exercices?.length > 0 &&
+          workoutData?.exercices?.map((exercice, key) => (
+            <Exercice workoutId={workoutId} exercice={exercice} key={key} />
+          ))}
+
+        {workoutId && <CreateExercice workoutId={workoutId} />}
+      </div>
     </div>
   );
 };
