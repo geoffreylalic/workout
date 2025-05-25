@@ -15,7 +15,7 @@ const Exercice = ({ workoutId, exercice }) => {
     <div className="m-5">
       {exercice && (
         <>
-          <h2 className="text-lg font-semibold mb-2">Détails de l'exercice</h2>
+          <h2 className="text-lg font-semibold mb-2">Détails de l'exercice: {exercice.name} </h2>
           <Table>
             <TableHeader>
               <TableRow>
