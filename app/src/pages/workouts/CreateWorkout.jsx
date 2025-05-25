@@ -32,27 +32,30 @@ export const CreateWorkout = () => {
 
   return (
     <div className="m-5">
-      <h1 className="mb-5 text-xl font-bold">Create workout</h1>
-
-      <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input
-          type="text"
-          placeholder="Workout name"
-          value={workoutName}
-          onChange={(e) => setWorkoutName(e.target.value)}
-        />
-        {workoutName && (
-          <Button
-            onClick={() => {
-              if (workoutName.trim()) {
-                mutationWorkout.mutate({ name: workoutName });
-              }
-            }}
-          >
-            Validate
-          </Button>
-        )}
-      </div>
+      <h1 className="mb-5 text-xl font-bold">Workout creation</h1>
+      {workoutData ? (
+        <h1 className="mb-5 text-xl font-bold">{workoutData.name}</h1>
+      ) : (
+        <div className="flex w-full max-w-sm items-center space-x-2">
+          <Input
+            type="text"
+            placeholder="Workout name"
+            value={workoutName}
+            onChange={(e) => setWorkoutName(e.target.value)}
+          />
+          {workoutName && (
+            <Button
+              onClick={() => {
+                if (workoutName.trim()) {
+                  mutationWorkout.mutate({ name: workoutName });
+                }
+              }}
+            >
+              Validate
+            </Button>
+          )}
+        </div>
+      )}
 
       {isLoading && <p>Chargement du workout...</p>}
       {isError && <p>Erreur lors du chargement du workout.</p>}
