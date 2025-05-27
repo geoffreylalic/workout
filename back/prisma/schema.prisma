@@ -50,7 +50,7 @@ model Set {
   id          Int      @id @default(autoincrement())
   repetitions Int?
   weight      Int?
-  rest        DateTime?
+  rest        Int?
   exercice    Exercice @relation(fields: [exerciceId], references: [id], onDelete: Cascade)
   exerciceId  Int
   createdBy   User     @relation(fields: [userId], references: [id], onDelete: Cascade)

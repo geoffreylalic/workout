@@ -16,7 +16,7 @@ const CreateSet = ({ workoutId, exerciceId }) => {
     },
   });
   return (
-    <TableCell colSpan={3} className="py-3 text-center">
+    <TableCell colSpan={4} className="py-3 text-center">
       <Button
         onClick={() => {
           mutationSet.mutate({ exerciceId: parseInt(exerciceId) });

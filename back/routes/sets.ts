@@ -68,7 +68,7 @@ router.put(
   bodyValidator(SetPut),
   async (req: UserReq, res: Response, next: NextFunction) => {
     const setId = req.params.id;
-    const body = { ...req.body, rest: timeToDatetime.parse(req.body.rest) };
+    const body = { ...req.body };
     try {
       const set = await prisma.set.update({
         where: { id: parseInt(setId), createdBy: req.user },

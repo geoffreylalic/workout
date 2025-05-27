@@ -15,13 +15,16 @@ const Exercice = ({ workoutId, exercice }) => {
     <div className="m-5">
       {exercice && (
         <>
-          <h2 className="text-lg font-semibold mb-2">Détails de l'exercice: {exercice.name} </h2>
+          <h2 className="text-lg font-semibold mb-2">
+            Détails de l'exercice: {exercice.name}
+          </h2>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Repetitions</TableHead>
                 <TableHead>Poids</TableHead>
                 <TableHead>Repos</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -29,14 +32,13 @@ const Exercice = ({ workoutId, exercice }) => {
                 exercice?.sets?.length > 0 &&
                 exercice?.sets?.map((set, key) => (
                   <TableRow key={key}>
-                    <Set set={set} />
+                    <Set set={set} workoutId={workoutId} />
                   </TableRow>
                 ))}
+              <CreateSet workoutId={workoutId} exerciceId={exercice.id} />
             </TableBody>
             <TableFooter>
-              <TableRow>
-                <CreateSet workoutId={workoutId} exerciceId={exercice.id} />
-              </TableRow>
+              <TableRow></TableRow>
             </TableFooter>
           </Table>
         </>

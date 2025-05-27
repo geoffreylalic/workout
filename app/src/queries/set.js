@@ -15,6 +15,9 @@ export const getSet = async (id) => {
   }
 };
 
-export const putSetFn = (data) => client.put("/sets/" + data.id, data, CONFIG);
+export const putSetFn = async ({ id, data }) => {
+  const res = await client.put("/sets/" + id, data, CONFIG);
+  return res.data;
+};
 
 export const deleteSetFn = (id) => client.delete("/sets/" + id, CONFIG);
