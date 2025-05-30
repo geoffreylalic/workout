@@ -8,7 +8,7 @@ import CreateExercice from "../../components/CreateExercice";
 
 export const CreateWorkout = () => {
   const [workoutName, setWorkoutName] = useState("");
-  const [workoutId, setWorkoutId] = useState("");
+  const [workoutId, setWorkoutId] = useState(48);
 
   const queryClient = useQueryClient();
 

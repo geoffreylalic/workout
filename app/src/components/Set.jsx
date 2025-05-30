@@ -2,7 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { putSetFn } from "../queries/set";
+import { deleteSetFn, putSetFn } from "../queries/set";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Set = ({ set, workoutId }) => {
@@ -12,7 +12,7 @@ const Set = ({ set, workoutId }) => {
   const [isUpdate, setIsUpdate] = useState();
 
   const queryClient = useQueryClient();
-  const mutationSet = useMutation({
+  const mutationUpdateSet = useMutation({
     mutationFn: putSetFn,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -20,6 +20,15 @@ const Set = ({ set, workoutId }) => {
       });
     },
   });
+  const mutationDeleteSet = useMutation({
+    mutationFn: deleteSetFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workouts", workoutId],
+      });
+    },
+  });
+
   return (
     <>
       <TableCell>
@@ -54,7 +63,7 @@ const Set = ({ set, workoutId }) => {
       </TableCell>
       <Button
         onClick={() => {
-          mutationSet.mutate({
+          mutationUpdateSet.mutate({
             id: set.id,
             data: {
               repetitions: rep,
@@ -67,6 +76,15 @@ const Set = ({ set, workoutId }) => {
         disabled={!rep || !weight || !rest}
       >
         Modifier
+      </Button>
+      <Button
+        onClick={() => {
+          mutationDeleteSet.mutate(set.id);
+        }}
+        className="center"
+        disabled={rep || weight || rest}
+      >
+        Supprimer
       </Button>
     </>
   );

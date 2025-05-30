@@ -20,4 +20,7 @@ export const putSetFn = async ({ id, data }) => {
   return res.data;
 };
 
-export const deleteSetFn = (id) => client.delete("/sets/" + id, CONFIG);
+export const deleteSetFn = async (id) => {
+  const res = await client.delete("/sets/" + id, CONFIG);
+  return res.data;
+};
