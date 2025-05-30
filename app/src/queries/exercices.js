@@ -31,5 +31,7 @@ export const createExerciceFn = async (exercice) => {
 export const createExerciceWithSetsFn = (exercice) =>
   client.post("/exercices/sets", exercice, CONFIG);
 
-export const deleteExerciceFn = (id) =>
-  client.delete("/exercices/" + id, CONFIG);
+export const deleteExerciceFn = async (id) => {
+  const res = await client.delete(`/exercices/${id}`, CONFIG);
+  return res.data;
+};

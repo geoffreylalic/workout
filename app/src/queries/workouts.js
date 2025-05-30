@@ -28,8 +28,10 @@ export const createWorkoutFn = async (workout) => {
   return res.data;
 };
 
-export const deleteWorkoutFn = (workoutId) =>
-  client.delete(`/workouts/${workoutId}`, CONFIG);
+export const deleteWorkoutFn = async (workoutId) => {
+  const res = await client.delete(`/workouts/${workoutId}`, CONFIG);
+  return res.data;
+};
 
 export const updateWorkoutFn = (workoutId, body) =>
   client.put(`/workouts/${workoutId}`, body, CONFIG);

@@ -6,18 +6,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 import Set from "./Set";
 import CreateSet from "./CreateSet";
+import { TableCell } from "@/components/ui/table";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteExerciceFn } from "../queries/exercices";
 
 const Exercice = ({ workoutId, exercice }) => {
+  const queryClient = useQueryClient();
+  const mutationExercice = useMutation({
+    mutationFn: deleteExerciceFn,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["workouts", workoutId] });
+    },
+  });
+
   return (
     <div className="m-5">
       {exercice && (
-        <>
-          <h2 className="text-lg font-semibold mb-2">
-            Détails de l'exercice: {exercice.name}
-          </h2>
+        <div>
+          <div className="flex justify-between">
+            <h2 className="text-lg font-semibold mb-2">{exercice.name}</h2>
+            <Button onClick={() => mutationExercice.mutate(exercice.id)}>
+              Supprimer
+            </Button>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -38,10 +53,15 @@ const Exercice = ({ workoutId, exercice }) => {
               <CreateSet workoutId={workoutId} exerciceId={exercice.id} />
             </TableBody>
             <TableFooter>
-              <TableRow></TableRow>
+              <TableRow>
+                <TableCell>Total repetitions{} </TableCell>
+                <TableCell>Total poids </TableCell>
+                <TableCell>Total repos {} </TableCell>
+                <TableCell>Total tonage</TableCell>
+              </TableRow>
             </TableFooter>
           </Table>
-        </>
+        </div>
       )}
     </div>
   );
