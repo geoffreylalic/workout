@@ -83,7 +83,6 @@ const Set = ({ set, workoutId }) => {
             mutationDeleteSet.mutate(set.id);
           }}
           className="center"
-          disabled={rep || weight || rest}
         >
           Supprimer
         </Button>
