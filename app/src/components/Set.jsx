@@ -61,31 +61,33 @@ const Set = ({ set, workoutId }) => {
           placeholder="Repos"
         />
       </TableCell>
-      <Button
-        onClick={() => {
-          mutationUpdateSet.mutate({
-            id: set.id,
-            data: {
-              repetitions: rep,
-              weight,
-              rest,
-            },
-          });
-        }}
-        className="center"
-        disabled={!rep || !weight || !rest}
-      >
-        Modifier
-      </Button>
-      <Button
-        onClick={() => {
-          mutationDeleteSet.mutate(set.id);
-        }}
-        className="center"
-        disabled={rep || weight || rest}
-      >
-        Supprimer
-      </Button>
+      <TableCell className="flex justify-around">
+        <Button
+          onClick={() => {
+            mutationUpdateSet.mutate({
+              id: set.id,
+              data: {
+                repetitions: rep,
+                weight,
+                rest,
+              },
+            });
+          }}
+          className="center"
+          disabled={!rep || !weight || !rest}
+        >
+          Modifier
+        </Button>
+        <Button
+          onClick={() => {
+            mutationDeleteSet.mutate(set.id);
+          }}
+          className="center"
+          disabled={rep || weight || rest}
+        >
+          Supprimer
+        </Button>
+      </TableCell>
     </>
   );
 };
