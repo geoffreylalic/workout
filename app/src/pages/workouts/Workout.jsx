@@ -5,10 +5,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createWorkoutFn, getWorkout } from "../../queries/workouts";
 import Exercice from "../../components/Exercice";
 import CreateExercice from "../../components/CreateExercice";
+import { useParams } from "react-router";
 
-export const CreateWorkout = () => {
+export const Workout = () => {
   const [workoutName, setWorkoutName] = useState("");
-  const [workoutId, setWorkoutId] = useState();
+  const [createWorkoutId, setCreateWorkoutId] = useState();
+  const { workoutId } = useParams();
+
+  const parsedWorkoutId = parseInt(createWorkoutId || workoutId);
 
   const queryClient = useQueryClient();
 
@@ -17,22 +21,22 @@ export const CreateWorkout = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["workouts", workoutId],
-    queryFn: () => getWorkout(workoutId),
-    enabled: !!workoutId,
+    queryKey: ["workouts", parsedWorkoutId],
+    queryFn: () => getWorkout(parsedWorkoutId),
+    enabled: !!parsedWorkoutId,
   });
 
   const mutationWorkout = useMutation({
     mutationFn: createWorkoutFn,
     onSuccess: (data) => {
-      setWorkoutId(data.id);
+      setCreateWorkoutId(data.id);
       queryClient.invalidateQueries({ queryKey: ["workouts", data.id] });
     },
   });
 
   return (
     <div className="m-5">
-      <h1 className="mb-5 text-xl font-bold">Workout creation</h1>
+      <h1 className="mb-5 text-xl font-bold">Workout</h1>
       {workoutData ? (
         <h1 className="mb-5 text-xl font-bold">{workoutData.name}</h1>
       ) : (
@@ -63,10 +67,16 @@ export const CreateWorkout = () => {
         {workoutData &&
           workoutData?.exercices?.length > 0 &&
           workoutData?.exercices?.map((exercice, key) => (
-            <Exercice workoutId={workoutId} exercice={exercice} key={key} />
+            <Exercice
+              workoutId={parsedWorkoutId}
+              exercice={exercice}
+              key={key}
+            />
           ))}
 
-        {workoutId && <CreateExercice workoutId={workoutId} />}
+        {parsedWorkoutId && (
+          <CreateExercice workoutId={parseInt(parsedWorkoutId)} />
+        )}
       </div>
     </div>
   );

@@ -38,11 +38,13 @@ const Workouts = () => {
       cell: (info) => new Date(info.getValue()).toLocaleDateString(),
     },
     {
+      accessorKey: "id",
+      header: "ID",
+    },
+    {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        console.log(row);
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -52,7 +54,11 @@ const Workouts = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={()=> navigate(`/workouts/${row.id}`)} >Modifier</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigate(`/workouts/${row.original.id}`)}
+              >
+                Modifier
+              </DropdownMenuItem>
               <DropdownMenuItem>Supprimer</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -63,8 +69,6 @@ const Workouts = () => {
 
   if (isLoading) return <div>Is loading</div>;
   if (isError) {
-    console.log(error);
-
     return <div>Is error</div>;
   }
 

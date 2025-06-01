@@ -21,9 +21,6 @@ const WorkoutsTable = ({ data, columns }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  console.log(table);
-  
-
   return (
     <div className="rounded-md border">
       <Table>
