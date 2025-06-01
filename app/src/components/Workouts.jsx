@@ -1,5 +1,5 @@
-import { getWorkouts } from "../queries/workouts";
-import { useQuery } from "@tanstack/react-query";
+import { deleteWorkoutFn, getWorkouts } from "../queries/workouts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import WorkoutsTable from "./tables/WorkoutsTable";
 import {
   DropdownMenu,
@@ -25,6 +25,15 @@ const Workouts = () => {
   });
 
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+
+  const deleteWorkoutMututation = useMutation({
+    mutationFn: deleteWorkoutFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workouts"] });
+    },
+  });
 
   const columns = [
     {
@@ -59,7 +68,15 @@ const Workouts = () => {
               >
                 Modifier
               </DropdownMenuItem>
-              <DropdownMenuItem>Supprimer</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  console.log(row.original.id);
+                  
+                  deleteWorkoutMututation.mutate(row.original.id);
+                }}
+              >
+                Supprimer
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
