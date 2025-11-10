@@ -36,7 +36,6 @@ export const Workout = () => {
 
   return (
     <div className="m-5">
-      <h1 className="mb-5 text-xl font-bold">Workout</h1>
       {workoutData ? (
         <h1 className="mb-5 text-xl font-bold">{workoutData.name}</h1>
       ) : (

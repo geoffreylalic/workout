@@ -4,7 +4,6 @@ import { useState } from "react";
 const ExercicesSteps = (props) => {
   const { exercice, workoutId, setCurrentExercice } = props;
   const [sets, setSets] = useState([{ repetitions: 0, rest: 0, weight: 0 }]);
-  // create exercice here and sets here
 
   const addSet = () => {
     setSets([...sets, { repetitions: 0, rest: 0, weight: 0 }]);

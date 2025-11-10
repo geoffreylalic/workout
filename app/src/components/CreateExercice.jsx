@@ -26,7 +26,7 @@ const CreateExercice = ({ workoutId }) => {
       <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
         <Input
           type="text"
-          placeholder="Exercise name"
+          placeholder="Développé couché"
           value={exerciceName}
           onChange={(e) => setExerciceName(e.target.value)}
         />
