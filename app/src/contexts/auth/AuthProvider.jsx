@@ -4,7 +4,7 @@ import AuthContext from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
-  const { isSuccess, isError, isLoading } = useQuery(me);
+  const { data, isError, isLoading } = useQuery(me);
 
   const loginMutation = useMutation({
     mutationFn: (data) => loginQuery(data),
@@ -134,7 +134,13 @@ const AuthProvider = ({ children }) => {
     return <div>Loading ...</div>;
   }
 
-  if (isSuccess) return <AuthContext.Provider>{children}</AuthContext.Provider>;
+  return (
+    data && (
+      <AuthContext.Provider value={{ user: data }}>
+        {children}
+      </AuthContext.Provider>
+    )
+  );
 };
 
 export default AuthProvider;
