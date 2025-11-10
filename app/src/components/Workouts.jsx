@@ -70,8 +70,6 @@ const Workouts = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  console.log(row.original.id);
-                  
                   deleteWorkoutMututation.mutate(row.original.id);
                 }}
               >
