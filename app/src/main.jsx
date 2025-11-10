@@ -1,13 +1,19 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  Routes,
+  Route,
+} from "react-router";
 import { SideBar } from "./components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@material-tailwind/react";
 import AuthProvider from "./contexts/auth/AuthProvider";
 import { Workout } from "./pages/workouts/Workout";
 import Home from "./pages/Home";
+import { CreateWorkout } from "./pages/workouts/CreateWorkout";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -20,7 +26,7 @@ const router = createBrowserRouter([
         path: "workouts",
         element: <></>,
       },
-      { path: "create-workout", element: <Workout /> },
+      { path: "create-workout", element: <CreateWorkout /> },
       { path: "workouts/:workoutId", element: <Workout /> },
     ],
   },
@@ -29,11 +35,21 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
-      </QueryClientProvider>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<SideBar />}>
+                <Route element={<CreateWorkout />}>
+                  <Route index element={<Home />} />
+                  <Route path="workouts" element={<></>} />
+                  <Route path="workouts/:workoutId" element={<Workout />} />
+                </Route>
+              </Route>
+            </Routes>
+          </AuthProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
     </ThemeProvider>
   </StrictMode>
 );

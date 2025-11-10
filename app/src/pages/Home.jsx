@@ -1,15 +1,20 @@
 import { Button, Typography } from "@material-tailwind/react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import Workouts from "../components/Workouts";
 const Home = () => {
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <div className="m-5">
       <div className="flex justify-between px-10 py-8">
         <div className="">
           <Typography className="text-2xl font-bold">Workouts</Typography>
         </div>
-        <Button onClick={() => navigate("/create-workout", { replace: true })}>
+        <Button
+          onClick={() => {
+            searchParams.set("create-workout", "true");
+            setSearchParams(searchParams);
+          }}
+        >
           Add workout
         </Button>
       </div>
