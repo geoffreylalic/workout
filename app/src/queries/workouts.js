@@ -1,9 +1,9 @@
-import { client, CONFIG } from "./axios";
+import client from "./client";
 
 // export const getWorkouts = {
 //   queryFn: async () => {
 //     return client
-//       .get("workouts", CONFIG)
+//       .get("workouts")
 //       .then((response) => Promise.resolve(response.data))
 //       .catch((error) => {
 //         console.error(error);
@@ -14,13 +14,13 @@ import { client, CONFIG } from "./axios";
 // };
 
 export const getWorkouts = async () => {
-  const res = await client.get("/workouts", CONFIG);
+  const res = await client.get("/workouts");
   return res.data;
 };
 
 export const getWorkout = async (id) => {
   try {
-    const res = await client.get(`workouts/${id}`, CONFIG);
+    const res = await client.get(`workouts/${id}`);
     return res.data;
   } catch (error) {
     console.error("Erreur lors du getWorkout:", error);
@@ -29,14 +29,14 @@ export const getWorkout = async (id) => {
 };
 
 export const createWorkoutFn = async (workout) => {
-  const res = await client.post("/workouts", workout, CONFIG);
+  const res = await client.post("/workouts", workout);
   return res.data;
 };
 
 export const deleteWorkoutFn = async (workoutId) => {
-  const res = await client.delete(`/workouts/${workoutId}`, CONFIG);
+  const res = await client.delete(`/workouts/${workoutId}`);
   return res.data;
 };
 
 export const updateWorkoutFn = (workoutId, body) =>
-  client.put(`/workouts/${workoutId}`, body, CONFIG);
+  client.put(`/workouts/${workoutId}`, body);

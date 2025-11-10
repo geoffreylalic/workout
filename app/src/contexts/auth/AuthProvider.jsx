@@ -1,7 +1,5 @@
-// import { loginQuery, me } from "../../../queries/authentication";
 import { loginQuery, me } from "../../queries/authentication";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React from "react";
 import AuthContext from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
@@ -44,7 +42,7 @@ const AuthProvider = ({ children }) => {
           onSubmit={(evt) => handleSubmit(evt)}
         >
           <div>
-            <label for="email" className="sr-only">
+            <label htmlFor="email" className="sr-only">
               Email
             </label>
 
@@ -76,7 +74,7 @@ const AuthProvider = ({ children }) => {
           </div>
 
           <div>
-            <label for="password" className="sr-only">
+            <label htmlFor="password" className="sr-only">
               Password
             </label>
 

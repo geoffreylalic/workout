@@ -1,9 +1,9 @@
-import { client, CONFIG } from "./axios";
+import client from "./client";
 
 export const getExercices = {
   queryFn: async () => {
     return client
-      .get("exercices", CONFIG)
+      .get("exercices")
       .then((response) => Promise.resolve(response.data))
       .catch((error) => {
         console.error(error);
@@ -15,7 +15,7 @@ export const getExercices = {
 
 export const getExercice = async (id) => {
   try {
-    const res = await client.get(`exercices/${id}`, CONFIG);
+    const res = await client.get(`exercices/${id}`);
     return res.data;
   } catch (error) {
     console.error("Erreur lors du getExercice:", error);
@@ -24,14 +24,14 @@ export const getExercice = async (id) => {
 };
 
 export const createExerciceFn = async (exercice) => {
-  const res = await client.post("/exercices", exercice, CONFIG);
+  const res = await client.post("/exercices", exercice);
   return res.data;
 };
 
 export const createExerciceWithSetsFn = (exercice) =>
-  client.post("/exercices/sets", exercice, CONFIG);
+  client.post("/exercices/sets", exercice);
 
 export const deleteExerciceFn = async (id) => {
-  const res = await client.delete(`/exercices/${id}`, CONFIG);
+  const res = await client.delete(`/exercices/${id}`);
   return res.data;
 };
