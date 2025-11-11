@@ -1,3 +1,38 @@
+## 0.3.0 (2025-11-11)
+
+### Feat
+
+- added create workout as dialog
+- **components**: added shadcn field and dialog
+- added logout
+- **workout**: delete workout
+- **workout**: get one workout
+- **workouts**: added workouts actions
+- **workouts**: list workouts
+- **sets**: delete sets in workout creation
+- **exercices**: delete exercice from workout creation
+- **set**: update set during workout creation
+- **set**: add set to workout
+- **workout**: create workout by name
+
+### Fix
+
+- **set**: fixed management of sets
+- **workout**: fixed refresh of current workout while updating exercices
+- **Auth**: rename file client and used axios interceptors
+- **workouts**: list workouts
+- **set**: never disable delete set
+- **sets**: querykey and showing sets on exercices
+
+### Refactor
+
+- **user-context**: added user in context after login
+- **exercice**: removed useless logic
+- **delete-v1**: removed all file related to v1
+- **global-workout**: refactored workout creation and query keys management
+- **vite**: migrated to vite
+- **vite**: migrating to vite
+
 ## 0.2.0 (2025-05-04)
 
 ### Feat
