@@ -1,10 +1,12 @@
 import { loginQuery, me } from "../../queries/authentication";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AuthContext from "./AuthContext";
+import { Link, useLocation } from "react-router";
 
 const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const { data, isError, isLoading } = useQuery(me);
+  const location = useLocation();
 
   const loginMutation = useMutation({
     mutationFn: (data) => loginQuery(data),
@@ -24,7 +26,7 @@ const AuthProvider = ({ children }) => {
     loginMutation.mutate(data);
   };
 
-  if (isError) {
+  if ((isError && !location.pathname.includes("/register")) || location.pathname.includes("/login")) {
     return (
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-lg text-center">
@@ -114,9 +116,9 @@ const AuthProvider = ({ children }) => {
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-500">
               No account?
-              <a className="underline" href="#">
+              <Link to="/register" replace={true}>
                 Sign up
-              </a>
+              </Link>
             </p>
 
             <button
@@ -135,11 +137,9 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    data && (
-      <AuthContext.Provider value={{ user: data }}>
-        {children}
-      </AuthContext.Provider>
-    )
+    <AuthContext.Provider value={{ user: data }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

@@ -4,6 +4,15 @@ export const loginQuery = async (data) => {
   return Promise.resolve(client.post("/auth/login", data));
 };
 
+export const signUp = async (data) => {
+  try {
+    await client.post("/auth/register", data);
+  } catch (error) {
+    console.error(error);
+    throw Error(error);
+  }
+};
+
 export const me = {
   queryKey: ["me"],
   queryFn: async () => {
@@ -16,4 +25,5 @@ export const me = {
       });
   },
   retry: false,
+  enabled: !!localStorage.getItem("accessToken"),
 };

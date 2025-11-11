@@ -14,23 +14,8 @@ import AuthProvider from "./contexts/auth/AuthProvider";
 import { Workout } from "./pages/workouts/Workout";
 import Home from "./pages/Home";
 import { CreateWorkout } from "./pages/workouts/CreateWorkout";
+import { SignUp } from "./pages/Signup";
 const queryClient = new QueryClient();
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <SideBar />,
-    children: [
-      { path: "", element: <Home /> },
-      {
-        path: "workouts",
-        element: <></>,
-      },
-      { path: "create-workout", element: <CreateWorkout /> },
-      { path: "workouts/:workoutId", element: <Workout /> },
-    ],
-  },
-]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -39,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <Routes>
+              <Route path="/register" element={<SignUp />} />
               <Route path="/" element={<SideBar />}>
                 <Route element={<CreateWorkout />}>
                   <Route index element={<Home />} />
