@@ -1,3 +1,9 @@
+## 0.4.1 (2025-11-11)
+
+### Fix
+
+- **config**: run locally or in production
+
 ## 0.4.0 (2025-11-11)
 
 ### Feat
