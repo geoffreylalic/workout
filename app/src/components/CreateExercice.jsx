@@ -1,44 +1,56 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createExerciceFn } from "../queries/exercices";
 import { useState } from "react";
 
 const CreateExercice = ({ workoutId }) => {
   const [exerciceName, setExerciceName] = useState("");
+  const [error, setError] = useState(null);
 
   const queryClient = useQueryClient();
 
   const mutationExercice = useMutation({
     mutationFn: createExerciceFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["workouts", workoutId],
-      });
+      queryClient.invalidateQueries({ queryKey: ["workouts", workoutId] });
+      setExerciceName("");
+      setError(null);
+    },
+    onError: () => {
+      setError("Une erreur est survenue. Réessayez.");
     },
   });
 
-  return (
-    <div className="m-5">
-      <h1 className="mb-3 text-xl font-bold">Créer un exercice</h1>
+  const handleSubmit = () => {
+    if (!exerciceName.trim()) {
+      setError("Le nom de l’exercice ne peut pas être vide.");
+      return;
+    }
+    mutationExercice.mutate({
+      workoutId: parseInt(workoutId),
+      name: exerciceName,
+    });
+  };
 
-      <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
+  return (
+    <div className="p-6 border rounded-lg shadow-sm max-w-md bg-white">
+      <h1 className="mb-4 text-lg font-semibold">Ajouter un exercice</h1>
+
+      <div className="space-y-3">
         <Input
           type="text"
-          placeholder="Développé couché"
+          placeholder="Ex: Développé couché"
           value={exerciceName}
           onChange={(e) => setExerciceName(e.target.value)}
+          className={error ? "border-red-500" : ""}
         />
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
         <Button
-          onClick={() => {
-            if (exerciceName.trim()) {
-              mutationExercice.mutate({
-                workoutId,
-                name: exerciceName,
-              });
-            }
-          }}
+          className="w-full"
+          onClick={handleSubmit}
           disabled={mutationExercice.isPending}
         >
           {mutationExercice.isPending ? "Ajout..." : "Valider"}

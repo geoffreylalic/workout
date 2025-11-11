@@ -54,7 +54,7 @@ export const Workout = () => {
                   />
                 ))}
 
-              {workoutId && <CreateExercice workoutId={parseInt(workoutId)} />}
+              {workoutId && <CreateExercice workoutId={workoutId} />}
             </div>
           </div>
         </CardContent>
