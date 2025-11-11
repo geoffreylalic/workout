@@ -8,11 +8,13 @@ import exercices from "./routes/exercices";
 import sets from "./routes/sets";
 import { authentication } from "./middlewares/auth";
 import cors from "cors";
+import { existsSync } from "fs";
 
 const env: String = process.env.ENV || "dev";
 const envFile: string = `./.env.${env}`;
 console.log("envFile", envFile);
-dotenv.config({ path: envFile });
+
+dotenv.config(existsSync(envFile) ? { path: envFile } : {});
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
