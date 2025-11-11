@@ -14,7 +14,11 @@ const env: String = process.env.ENV || "dev";
 const envFile: string = `./.env.${env}`;
 console.log("envFile", envFile);
 
-dotenv.config(existsSync(envFile) ? { path: envFile } : {});
+if (existsSync(envFile)) {
+  dotenv.config({ path: envFile });
+} else {
+  dotenv.config();
+}
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
