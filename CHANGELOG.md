@@ -1,3 +1,11 @@
+## 0.4.3 (2025-11-12)
+
+### Fix
+
+- **regiter**: refactored and removed password from the response
+- **register**: cannot create user with an existing email$
+- **types**: added user type to the request
+
 ## 0.4.2 (2025-11-11)
 
 ### Fix
