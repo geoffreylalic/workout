@@ -5,7 +5,10 @@ import { bodyValidator } from "../middlewares/bodyValidator";
 import {
   WorkoutCreate,
   WorkoutCreateFull,
+  WorkoutCreateFullType,
+  WorkoutCreateType,
   WorkoutUpdate,
+  WorkoutUpdateType,
 } from "../validators/workout";
 
 const router = Router();
@@ -17,11 +20,11 @@ router.get("", async (req: Request, res: Response) => {
       createdBy: (req as UserReq).user,
     },
   });
-  res.status(200).send(workouts);
+  res.status(200).json(workouts);
   return;
 });
 
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/:id", async (req: Request<{ id: string }>, res: Response) => {
   const workoutId = parseInt(req.params.id);
   try {
     const workout = await prisma.workout.findUnique({
@@ -35,16 +38,16 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
         },
       },
     });
-    res.status(200).send(workout);
+    res.status(200).json(workout);
   } catch (error) {
-    res.status(400).send({ error: error });
+    res.status(400).json({ error });
   }
 });
 
 router.post(
   "",
   bodyValidator(WorkoutCreate),
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{}, {}, WorkoutCreateType>, res: Response) => {
     const { name } = req.body;
     const workout = await prisma.workout.create({
       data: {
@@ -52,14 +55,14 @@ router.post(
         userId: (req as UserReq).user.id,
       },
     });
-    res.status(200).send(workout);
+    res.status(200).json(workout);
   }
 );
 
 router.post(
   "/full",
   bodyValidator(WorkoutCreateFull),
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{}, {}, WorkoutCreateFullType>, res: Response) => {
     const { exercices, ...workout } = req.body;
     const sets = exercices.map((ex: any) => {
       return ex.sets;
@@ -100,10 +103,10 @@ router.post(
         await tx.set.createMany({ data: setsToCreate });
       });
     } catch (error) {
-      res.status(400).send(error);
+      res.status(400).json({ error });
       return;
     }
-    res.send({ succes: true });
+    res.json({ succes: true });
 
     return;
   }
@@ -112,7 +115,10 @@ router.post(
 router.put(
   "/:id",
   bodyValidator(WorkoutUpdate),
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{ id: string }, {}, WorkoutUpdateType>,
+    res: Response
+  ) => {
     const workoutId = req.params.id;
     const body = req.body;
     try {
@@ -120,28 +126,25 @@ router.put(
         where: { id: parseInt(workoutId) },
         data: body,
       });
-      res.status(200).send(workout);
+      res.status(200).json(workout);
     } catch (error) {
-      res.status(400).send({ error: error });
+      res.status(400).json({ error });
     }
     return;
   }
 );
 
-router.delete(
-  "/:id",
-  async (req: Request, res: Response, next: NextFunction) => {
-    const workoutId = req.params.id;
-    try {
-      await prisma.workout.delete({
-        where: { id: parseInt(workoutId) },
-      });
-      res.status(204).send();
-    } catch (error) {
-      res.status(400).send({ error: error });
-    }
-    return;
+router.delete("/:id", async (req: Request<{ id: string }>, res: Response) => {
+  const workoutId = req.params.id;
+  try {
+    await prisma.workout.delete({
+      where: { id: parseInt(workoutId) },
+    });
+    res.status(204).send();
+  } catch (error) {
+    res.status(400).json({ error });
   }
-);
+  return;
+});
 
 export default router;

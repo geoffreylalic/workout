@@ -5,6 +5,6 @@ export interface LoggerReq extends Request {
   time?: string;
 }
 
-export interface UserReq extends Request {
+export interface UserReq<Body = any> extends Request<any, any, Body, any> {
   user: User;
 }

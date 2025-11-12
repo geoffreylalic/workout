@@ -1,6 +1,12 @@
 import { Router, Response, Request } from "express";
 import { bodyValidator } from "../middlewares/bodyValidator";
-import { UserCreate, UserWithoutPassword } from "../validators/user";
+import {
+  UserCreate,
+  UserCreateType,
+  UserLogin,
+  UserLoginType,
+  UserWithoutPassword,
+} from "../validators/user";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt, { Secret, JwtPayload } from "jsonwebtoken";
@@ -13,13 +19,13 @@ const prisma = new PrismaClient();
 router.post(
   "/register",
   bodyValidator(UserCreate),
-  async (req: Request, res: Response) => {
+  async (req: Request<{}, {}, UserCreateType>, res: Response) => {
     const body = req.body;
     const exists: number = await prisma.user.count({
       where: { email: body.email },
     });
     if (exists > 0) {
-      res.status(400).send({ error: "Email already exists" });
+      res.status(400).json({ error: "Email already exists" });
       return;
     }
     try {
@@ -27,7 +33,7 @@ router.post(
       const hashedPassword = await bcrypt.hash(body.password, salt);
       const data = { ...body, password: hashedPassword };
       await prisma.user.create({ data: data }).then((data) => {
-        res.status(200).send({
+        res.status(200).json({
           id: data.id,
           email: data.email,
           firstName: data.firstName,
@@ -41,45 +47,49 @@ router.post(
   }
 );
 
-router.post("/login", async (req: Request, res: Response) => {
-  const body = req.body;
-  const user = await prisma.user.findUnique({
-    where: { email: body.email },
-  });
-
-  if (user) {
-    bcrypt.compare(body.password, user?.password, (err, result) => {
-      if (err) {
-        res.status(500).send({ error: "Internal server error" });
-        return;
-      } else if (result) {
-        const accessToken = jwt.sign(
-          { id: user.id },
-          process.env.AUTH_SECRET as Secret,
-          {
-            expiresIn: "2 days",
-          }
-        );
-        res.status(200).send({
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          accessToken: accessToken,
-        });
-      } else {
-        res.status(401).send({ error: "Invalid username or password" });
-      }
+router.post(
+  "/login",
+  bodyValidator(UserLogin),
+  async (req: Request<{}, {}, UserLoginType>, res: Response) => {
+    const body = req.body;
+    const user = await prisma.user.findUnique({
+      where: { email: body.email },
     });
-    return;
-  }
 
-  res.status(400).send({ error: "User not found." });
-});
+    if (user) {
+      bcrypt.compare(body.password, user?.password, (err, result) => {
+        if (err) {
+          res.status(500).json({ error: "Internal server error" });
+          return;
+        } else if (result) {
+          const accessToken = jwt.sign(
+            { id: user.id },
+            process.env.AUTH_SECRET as Secret,
+            {
+              expiresIn: "2 days",
+            }
+          );
+          res.status(200).json({
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            accessToken: accessToken,
+          });
+        } else {
+          res.status(401).json({ error: "Invalid username or password" });
+        }
+      });
+      return;
+    }
+
+    res.status(400).json({ error: "User not found." });
+  }
+);
 
 router.get("/me", async (req: Request, res: Response) => {
   const authToken = req.headers.authorization?.split("Bearer ")[1];
   if (!authToken) {
-    res.status(404).send({ error: "User not found." });
+    res.status(404).json({ error: "User not found." });
     return;
   }
   try {
@@ -91,10 +101,10 @@ router.get("/me", async (req: Request, res: Response) => {
       where: { id: payload.id },
       select: UserWithoutPassword,
     });
-    res.status(200).send(user);
+    res.status(200).json(user);
     return;
   } catch (error) {
-    res.status(401).send({ error: error });
+    res.status(401).json({ error });
     return;
   }
 });

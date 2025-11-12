@@ -14,7 +14,7 @@ export const authentication: RequestHandler = async (
 ) => {
   const token = req.headers.authorization?.split("Bearer ")[1];
   if (!token) {
-    res.status(401).send({ error: "Missing authentication prefix." });
+    res.status(401).json({ error: "Missing authentication prefix." });
     return;
   }
   let payload: JwtPayload;
@@ -29,14 +29,14 @@ export const authentication: RequestHandler = async (
     });
 
     if (!user) {
-      res.status(401).send({ error: "User not found" });
+      res.status(401).json({ error: "User not found" });
       return;
     }
 
     (req as UserReq).user = user;
     next();
   } catch (error) {
-    res.status(401).send({ error: error });
+    res.status(401).json({ error });
     return;
   }
 };

@@ -6,7 +6,7 @@ export const bodyValidator =
     try {
       schema.parse(req.body);
     } catch (error) {
-      res.status(422).send(error);
+      res.status(422).json({ error });
       return;
     }
     next();

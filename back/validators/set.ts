@@ -32,11 +32,15 @@ export const SetCreate = z.object({
   exerciceId: z.number(),
 });
 
+export type SetCreateType = z.infer<typeof SetCreate>;
+
 export const SetPut = z.object({
   repetitions: z.number(),
   weight: z.number(),
   rest: z.number(),
 });
+
+export type SetPutType = z.infer<typeof SetPut>;
 
 export const SetId = z.object({
   id: z.number(),
