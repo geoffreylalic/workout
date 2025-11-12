@@ -9,12 +9,12 @@
     "generate": "npx prisma generate",
     "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
     "migrate:prod": "dotenv -e .env.production -- npx prisma migrate dev",
-    "build" : "npm install; prisma migrate dev"
+    "build": "npm install; prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@auth/express": "^0.6.0",
+    "@auth/express": "^0.12.1",
     "@prisma/client": "^5.17.0",
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
@@ -34,6 +34,6 @@
     "@types/node": "^20.14.12",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.9.3"
   }
 }
