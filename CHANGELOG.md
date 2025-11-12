@@ -1,3 +1,9 @@
+## 0.4.5 (2025-11-12)
+
+### Refactor
+
+- **types**: added type to all routes
+
 ## 0.4.4 (2025-11-12)
 
 ### Fix
