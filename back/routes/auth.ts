@@ -22,13 +22,22 @@ router.post(
       res.status(400).send({ error: "Email already exists" });
       return;
     }
-    bcrypt.genSalt(10, function (err, salt) {
-      bcrypt.hash(body.password, salt, async function (err, hash) {
-        const data = { ...body, password: hash };
-        const user = await prisma.user.create({ data: data });
-        res.status(200).send(user);
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(body.password, salt);
+      const data = { ...body, password: hashedPassword };
+      await prisma.user.create({ data: data }).then((data) => {
+        res.status(200).send({
+          id: data.id,
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
       });
-    });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
   }
 );
 
