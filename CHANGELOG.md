@@ -1,3 +1,9 @@
+## 0.4.4 (2025-11-12)
+
+### Fix
+
+- **auth**: fixed login and logout flow
+
 ## 0.4.3 (2025-11-12)
 
 ### Fix
