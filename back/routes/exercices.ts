@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Response, NextFunction, Router } from "express";
+import { Response, NextFunction, Router, Request } from "express";
 import { UserReq } from "../interfaces/request";
 import { bodyValidator } from "../middlewares/bodyValidator";
 import {
@@ -12,20 +12,20 @@ import { timeToDatetime } from "../validators/set";
 const router = Router();
 const prisma = new PrismaClient();
 
-router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
+router.get("", async (req: Request, res: Response) => {
   const exercices = await prisma.exercice.findMany({
     where: {
-      createdBy: req.user,
+      createdBy: (req as UserReq).user,
     },
   });
   res.status(200).send(exercices);
 });
 
-router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const exerciceId = req.params.id;
   const exercice = await prisma.exercice.findFirst({
     where: {
-      createdBy: req.user,
+      createdBy: (req as UserReq).user,
       id: parseInt(exerciceId),
     },
     include: {
@@ -38,13 +38,13 @@ router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
 router.post(
   "",
   bodyValidator(ExerciceCreate),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { name, workoutId } = req.body;
     const exercice = await prisma.exercice.create({
       data: {
         name: name,
         workout: { connect: { id: workoutId } },
-        createdBy: { connect: { id: req.user.id } },
+        createdBy: { connect: { id: (req as UserReq).user.id } },
       },
     });
     res.send(exercice);
@@ -54,13 +54,13 @@ router.post(
 router.post(
   "/sets",
   bodyValidator(ExerciceSetCreate),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { name, sets, workoutId } = req.body;
     try {
       await prisma.$transaction(async (tx) => {
         const createdExercice = await tx.exercice.create({
           data: {
-            userId: req.user.id,
+            userId: (req as UserReq).user.id,
             name: name,
             workoutId: workoutId,
           },
@@ -71,7 +71,7 @@ router.post(
             set.rest = timeToDatetime.parse(set.rest);
             return {
               exerciceId: createdExercice.id,
-              userId: req.user.id,
+              userId: (req as UserReq).user.id,
               ...set,
             };
           }),
@@ -89,7 +89,7 @@ router.post(
 router.put(
   "/:id",
   bodyValidator(ExercicePut),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const exerciceId = req.params.id;
     const body = req.body;
     try {
@@ -106,7 +106,7 @@ router.put(
 
 router.delete(
   "/:id",
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const exerciceId = req.params.id;
     try {
       await prisma.exercice.delete({

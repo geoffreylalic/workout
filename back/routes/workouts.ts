@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextFunction, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { UserReq } from "../interfaces/request";
 import { bodyValidator } from "../middlewares/bodyValidator";
 import {
@@ -11,23 +11,23 @@ import {
 const router = Router();
 const prisma = new PrismaClient();
 
-router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
+router.get("", async (req: Request, res: Response) => {
   const workouts = await prisma.workout.findMany({
     where: {
-      createdBy: req.user,
+      createdBy: (req as UserReq).user,
     },
   });
   res.status(200).send(workouts);
   return;
 });
 
-router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const workoutId = parseInt(req.params.id);
   try {
     const workout = await prisma.workout.findUnique({
       where: {
         id: workoutId,
-        createdBy: req.user,
+        createdBy: (req as UserReq).user,
       },
       include: {
         exercices: {
@@ -44,12 +44,12 @@ router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
 router.post(
   "",
   bodyValidator(WorkoutCreate),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
     const workout = await prisma.workout.create({
       data: {
         name: name,
-        userId: req.user.id,
+        userId: (req as UserReq).user.id,
       },
     });
     res.status(200).send(workout);
@@ -59,7 +59,7 @@ router.post(
 router.post(
   "/full",
   bodyValidator(WorkoutCreateFull),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { exercices, ...workout } = req.body;
     const sets = exercices.map((ex: any) => {
       return ex.sets;
@@ -68,7 +68,7 @@ router.post(
       await prisma.$transaction(async (tx) => {
         const createdWorkout = await tx.workout.create({
           data: {
-            userId: req.user.id,
+            userId: (req as UserReq).user.id,
             ...workout,
           },
         });
@@ -77,7 +77,7 @@ router.post(
             delete ex.sets;
             return {
               workoutId: createdWorkout.id,
-              userId: req.user.id,
+              userId: (req as UserReq).user.id,
               ...ex,
             };
           }),
@@ -92,7 +92,7 @@ router.post(
           .map((exercice, index) => {
             return sets[index].map((set: any) => {
               set.exerciceId = exercice.id;
-              set.userId = req.user.id;
+              set.userId = (req as UserReq).user.id;
               return set;
             });
           })
@@ -112,7 +112,7 @@ router.post(
 router.put(
   "/:id",
   bodyValidator(WorkoutUpdate),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const workoutId = req.params.id;
     const body = req.body;
     try {
@@ -130,7 +130,7 @@ router.put(
 
 router.delete(
   "/:id",
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const workoutId = req.params.id;
     try {
       await prisma.workout.delete({

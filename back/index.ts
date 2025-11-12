@@ -1,5 +1,11 @@
 // src/index.js
-import express, { Express, NextFunction, Request, Response } from "express";
+import express, {
+  Express,
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express";
 import dotenv from "dotenv";
 import { logger } from "./middlewares/logger";
 import auth from "./routes/auth";

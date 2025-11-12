@@ -1,13 +1,14 @@
-import { PrismaClient, User } from "@prisma/client";
-import { NextFunction, Response, Request } from "express";
+import { PrismaClient } from "@prisma/client";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { UserWithoutPassword } from "../validators/user";
 import { UserReq } from "../interfaces/request";
+import { User } from "../interfaces/user";
 
 const prisma = new PrismaClient();
 
-export const authentication = async (
-  req: UserReq,
+export const authentication: RequestHandler = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -22,15 +23,20 @@ export const authentication = async (
       token as string,
       process.env.AUTH_SECRET as Secret
     ) as JwtPayload;
-    const user = await prisma.user.findUnique({
+    const user: User | null = await prisma.user.findUnique({
       where: { id: payload.id },
       select: UserWithoutPassword,
     });
-    req.user = user;
+
+    if (!user) {
+      res.status(401).send({ error: "User not found" });
+      return;
+    }
+
+    (req as UserReq).user = user;
+    next();
   } catch (error) {
     res.status(401).send({ error: error });
     return;
   }
-
-  next();
 };

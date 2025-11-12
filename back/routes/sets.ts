@@ -1,62 +1,41 @@
 import { PrismaClient } from "@prisma/client";
-import { Response, NextFunction, Router } from "express";
+import { Response, NextFunction, Router, Request } from "express";
 import { UserReq } from "../interfaces/request";
-import { WorkoutUpdate } from "../validators/workout";
 import { bodyValidator } from "../middlewares/bodyValidator";
-import { ExerciceCreate, ExercicePut } from "../validators/exercice";
-import { SetCreate, SetPut, timeToDatetime } from "../validators/set";
+import { SetCreate, SetPut } from "../validators/set";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.get("", async (req: UserReq, res: Response, next: NextFunction) => {
+router.get("", async (req: Request, res: Response) => {
   const sets = await prisma.set.findMany({
     where: {
-      createdBy: req.user,
+      createdBy: (req as UserReq).user,
     },
   });
   res.status(200).send(sets);
 });
 
-router.get("/:id", async (req: UserReq, res: Response, next: NextFunction) => {
+router.get("/:id", async (req: Request, res: Response) => {
   const setId = req.params.id;
   const set = await prisma.set.findFirst({
     where: {
-      createdBy: req.user,
+      createdBy: (req as UserReq).user,
       id: parseInt(setId),
     },
   });
   res.status(200).send(set);
 });
 
-// router.post(
-//   "",
-//   bodyValidator(SetCreate),
-//   async (req: UserReq, res: Response, next: NextFunction) => {
-//     const { repetitions, weight, rest, exerciceId } = req.body;
-//     const restDateTime = timeToDatetime.parse(rest);
-//     const exercice = await prisma.set.create({
-//       data: {
-//         repetitions,
-//         weight,
-//         rest: restDateTime,
-//         createdBy: { connect: { id: req.user.id } },
-//         exercice: { connect: { id: exerciceId } },
-//       },
-//     });
-//     res.send({ exercice });
-//   }
-// );
-
 router.post(
   "",
   bodyValidator(SetCreate),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { exerciceId } = req.body;
     const set = await prisma.set.create({
       data: {
         exercice: { connect: { id: exerciceId } },
-        createdBy: { connect: { id: req.user.id } },
+        createdBy: { connect: { id: (req as UserReq).user.id } },
       },
     });
     res.send(set);
@@ -66,12 +45,12 @@ router.post(
 router.put(
   "/:id",
   bodyValidator(SetPut),
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const setId = req.params.id;
     const body = { ...req.body };
     try {
       const set = await prisma.set.update({
-        where: { id: parseInt(setId), createdBy: req.user },
+        where: { id: parseInt(setId), createdBy: (req as UserReq).user },
         data: body,
       });
       res.status(200).send(set);
@@ -83,11 +62,11 @@ router.put(
 
 router.delete(
   "/:id",
-  async (req: UserReq, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const setId = req.params.id;
     try {
       await prisma.set.delete({
-        where: { id: parseInt(setId), createdBy: req.user },
+        where: { id: parseInt(setId), createdBy: (req as UserReq).user },
       });
       res.status(204).send();
     } catch (error) {
