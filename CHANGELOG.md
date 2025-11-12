@@ -1,3 +1,9 @@
+## 0.4.6 (2025-11-12)
+
+### Fix
+
+- **create-object**: fixed ids
+
 ## 0.4.5 (2025-11-12)
 
 ### Refactor
