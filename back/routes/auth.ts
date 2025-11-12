@@ -4,6 +4,8 @@ import { UserCreate, UserWithoutPassword } from "../validators/user";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import { User } from "../interfaces/user";
+import { error } from "console";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -11,8 +13,15 @@ const prisma = new PrismaClient();
 router.post(
   "/register",
   bodyValidator(UserCreate),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const body = req.body;
+    const exists: number = await prisma.user.count({
+      where: { email: body.email },
+    });
+    if (exists > 0) {
+      res.status(400).send({ error: "Email already exists" });
+      return;
+    }
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(body.password, salt, async function (err, hash) {
         const data = { ...body, password: hash };
