@@ -46,8 +46,8 @@ router.post(
     const exercice = await prisma.exercice.create({
       data: {
         name: name,
-        workout: { connect: { id: workoutId } },
-        createdBy: { connect: { id: (req as UserReq).user.id } },
+        workoutId: workoutId,
+        userId: (req as UserReq).user.id,
       },
     });
     res.json(exercice);

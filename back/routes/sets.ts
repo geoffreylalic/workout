@@ -40,8 +40,8 @@ router.post(
     const { exerciceId } = req.body;
     const set = await prisma.set.create({
       data: {
-        exercice: { connect: { id: exerciceId } },
-        createdBy: { connect: { id: (req as UserReq).user.id } },
+        exerciceId: exerciceId,
+        userId: (req as UserReq).user.id,
       },
     });
     res.json(set);
