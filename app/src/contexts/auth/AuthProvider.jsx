@@ -1,9 +1,10 @@
 import { loginQuery, me } from "../../queries/authentication";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AuthContext from "./AuthContext";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data, isError, isLoading } = useQuery(me);
   const location = useLocation();
@@ -13,6 +14,8 @@ const AuthProvider = ({ children }) => {
     onSuccess: (response) => {
       localStorage.setItem("accessToken", response.data.accessToken);
       queryClient.invalidateQueries({ queryKey: ["me"] });
+      navigate("/", { replace: true });
+      window.location.reload();
     },
   });
 
@@ -26,7 +29,10 @@ const AuthProvider = ({ children }) => {
     loginMutation.mutate(data);
   };
 
-  if ((isError && !location.pathname.includes("/register")) || location.pathname.includes("/login")) {
+  if (
+    (isError && !location.pathname.includes("/register")) ||
+    location.pathname.includes("/login")
+  ) {
     return (
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-lg text-center">
@@ -132,6 +138,7 @@ const AuthProvider = ({ children }) => {
       </div>
     );
   }
+
   if (isLoading) {
     return <div>Loading ...</div>;
   }

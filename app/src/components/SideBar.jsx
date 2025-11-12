@@ -1,9 +1,10 @@
 import { useContext } from "react";
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router";
 import AuthContext from "../contexts/auth/AuthContext";
 import { House } from "lucide-react";
 
 const SideBar = () => {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   return (
     <div className="flex">
@@ -40,6 +41,7 @@ const SideBar = () => {
               onClick={() => {
                 localStorage.removeItem("accessToken");
                 window.location.reload();
+                navigate("/login");
               }}
               className="group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
             >
