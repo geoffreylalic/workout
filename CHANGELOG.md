@@ -1,3 +1,9 @@
+## 0.4.10 (2025-11-14)
+
+### Fix
+
+- **package**: fixed package scripts
+
 ## 0.4.9 (2025-11-14)
 
 ### Fix
