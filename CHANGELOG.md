@@ -1,3 +1,10 @@
+## 0.4.11 (2025-11-14)
+
+### Fix
+
+- **login**: removed login from context
+- **tsconfig**: fixed tsconfig to include files to build
+
 ## 0.4.10 (2025-11-14)
 
 ### Fix
