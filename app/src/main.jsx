@@ -15,6 +15,7 @@ import { Workout } from "./pages/workouts/Workout";
 import Home from "./pages/Home";
 import { CreateWorkout } from "./pages/workouts/CreateWorkout";
 import { SignUp } from "./pages/Signup";
+import { SignIn } from "./pages/SignIn";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <Routes>
+              <Route path="/login" element={<SignIn />} />
               <Route path="/register" element={<SignUp />} />
               <Route path="/" element={<SideBar />}>
                 <Route element={<CreateWorkout />}>

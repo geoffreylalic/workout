@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { signUp } from "../queries/authentication";
-import { useNavigate } from "react-router";
+import { Link, replace, useNavigate } from "react-router";
 import { useState } from "react";
 
 export function SignupForm({ ...props }) {
@@ -116,7 +116,10 @@ export function SignupForm({ ...props }) {
               <Field>
                 <Button type="submit">Create Account</Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <a href="#">Sign in</a>
+                  Already have an account? 
+                  <Link to={"/login"} replace>
+                    Sign in
+                  </Link>{" "}
                 </FieldDescription>
               </Field>
             </FieldGroup>
