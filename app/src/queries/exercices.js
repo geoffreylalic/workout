@@ -35,3 +35,8 @@ export const deleteExerciceFn = async (id) => {
   const res = await client.delete(`/exercices/${id}`);
   return res.data;
 };
+
+export const putExerciceFn = async (data) => {
+  const res = await client.put(`/exercices/${data.id}`, data.body);
+  return res.data;
+};
