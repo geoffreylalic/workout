@@ -1,3 +1,13 @@
+## 0.5.0 (2025-11-15)
+
+### Feat
+
+- **exercice**: added query change name exercice
+
+### Fix
+
+- **app-config**: fix app config for autocompletion
+
 ## 0.4.13 (2025-11-14)
 
 ### Fix
