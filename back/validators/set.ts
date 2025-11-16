@@ -26,10 +26,8 @@ export const timeToDatetime = z.string().transform((val) => {
 });
 
 export const SetCreate = z.object({
-  // repetitions: z.number(),
-  // weight: z.number(),
-  // rest: z.string(),
   exerciceId: z.number(),
+  position: z.number(),
 });
 
 export type SetCreateType = z.infer<typeof SetCreate>;

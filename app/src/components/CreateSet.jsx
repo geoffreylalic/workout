@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createSetFn } from "../queries/set";
 
-const CreateSet = ({ workoutId, exerciceId }) => {
+const CreateSet = ({ workoutId, exercice }) => {
   const queryClient = useQueryClient();
 
   const mutationSet = useMutation({
@@ -19,7 +19,10 @@ const CreateSet = ({ workoutId, exerciceId }) => {
     <TableCell colSpan={4} className="py-3 text-center">
       <Button
         onClick={() => {
-          mutationSet.mutate({ exerciceId: parseInt(exerciceId) });
+          mutationSet.mutate({
+            exerciceId: exercice.id,
+            position: exercice.sets.length,
+          });
         }}
       >
         Ajouter une série

@@ -37,10 +37,11 @@ router.post(
   "",
   bodyValidator(SetCreate),
   async (req: Request<{}, {}, SetCreateType>, res: Response) => {
-    const { exerciceId } = req.body;
+    const { exerciceId, position } = req.body;
     const set = await prisma.set.create({
       data: {
         exercice: { connect: { id: exerciceId } },
+        position,
         createdBy: { connect: { id: (req as UserReq).user.id } },
       },
     });
