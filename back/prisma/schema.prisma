@@ -28,7 +28,7 @@ model User {
 model Workout {
   id         Int        @id @default(autoincrement())
   name       String
-  createdAt  DateTime? @default(now())
+  createdAt  DateTime?  @default(now())
   startedAt  DateTime?
   finishedAt DateTime?
   exercices  Exercice[]
@@ -37,17 +37,19 @@ model Workout {
 }
 
 model Exercice {
-  id        Int       @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
+  position  Int     @default(0)
   name      String
   sets      Set[]
-  workout   Workout   @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId Int
-  createdBy User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdBy User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
 }
 
 model Set {
   id          Int      @id @default(autoincrement())
+  position    Int      @default(0)
   repetitions Int?
   weight      Int?
   rest        Int?
