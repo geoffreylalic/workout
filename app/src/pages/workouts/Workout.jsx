@@ -19,13 +19,19 @@ export const Workout = () => {
 
   const { workoutId } = useParams();
 
+  const id = Number(workoutId);
+
+  if (isNaN(id)) {
+    return <div>ID invalide</div>;
+  }
+
   const {
     data: workoutData,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["workouts", workoutId],
-    queryFn: () => getWorkout(workoutId),
+    queryKey: ["workouts", id],
+    queryFn: () => getWorkout(id),
   });
 
   if (isError) return <div>error</div>;
@@ -48,13 +54,13 @@ export const Workout = () => {
                 workoutData?.exercices?.length > 0 &&
                 workoutData?.exercices?.map((exercice, key) => (
                   <Exercice
-                    workoutId={workoutId}
+                    workoutId={id}
                     exercice={exercice}
                     key={key}
                   />
                 ))}
 
-              {workoutId && <CreateExercice workoutId={workoutId} />}
+              {id && <CreateExercice workoutId={id} />}
             </div>
           </div>
         </CardContent>
