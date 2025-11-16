@@ -9,6 +9,7 @@ export const ExerciceCreateFull = z.object({
 export const ExerciceCreate = z.object({
   name: z.string(),
   workoutId: z.number(),
+  position: z.number(),
 });
 
 export type ExerciceCreateType = z.infer<typeof ExerciceCreate>;

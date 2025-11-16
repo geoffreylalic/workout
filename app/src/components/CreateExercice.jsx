@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createExerciceFn } from "../queries/exercices";
 import { useState } from "react";
 
-const CreateExercice = ({ workoutId }) => {
+const CreateExercice = ({ workout }) => {
   const [exerciceName, setExerciceName] = useState("");
   const [error, setError] = useState(null);
 
@@ -13,7 +13,7 @@ const CreateExercice = ({ workoutId }) => {
   const mutationExercice = useMutation({
     mutationFn: createExerciceFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workouts", workoutId] });
+      queryClient.invalidateQueries({ queryKey: ["workouts", workout.id] });
       setExerciceName("");
       setError(null);
     },
@@ -28,7 +28,8 @@ const CreateExercice = ({ workoutId }) => {
       return;
     }
     mutationExercice.mutate({
-      workoutId: parseInt(workoutId),
+      workoutId: workout.id,
+      position: workout.exercices.length,
       name: exerciceName,
     });
   };

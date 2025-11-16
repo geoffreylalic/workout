@@ -28,7 +28,6 @@ export function SignupForm({ ...props }) {
     mutationFn: signUp,
     mutationKey: ["user"],
     onMutate: (data) => {
-      console.log(data);
       navigate("/login", { replace: true });
     },
   });

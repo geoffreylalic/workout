@@ -51,16 +51,14 @@ export const Workout = () => {
             {isError && <p>Erreur lors du chargement du workout.</p>}
             <div>
               {workoutData &&
-                workoutData?.exercices?.length > 0 &&
-                workoutData?.exercices?.map((exercice, key) => (
-                  <Exercice
-                    workoutId={id}
-                    exercice={exercice}
-                    key={key}
-                  />
-                ))}
+                workoutData.exercices?.length > 0 &&
+                workoutData.exercices
+                  .sort((a, b) => a.position < b.position)
+                  .map((exercice, key) => (
+                    <Exercice workoutId={id} exercice={exercice} key={key} />
+                  ))}
 
-              {id && <CreateExercice workoutId={id} />}
+              {id && <CreateExercice workout={workoutData} />}
             </div>
           </div>
         </CardContent>

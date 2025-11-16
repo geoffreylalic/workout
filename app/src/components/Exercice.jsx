@@ -39,7 +39,6 @@ const Exercice = ({ workoutId, exercice }) => {
   });
 
   const handleExerciceName = () => {
-    console.log(exerciceName);
     if (exerciceName !== exercice.name) {
       mutationPutExercice.mutate({
         id: exercice.id,
