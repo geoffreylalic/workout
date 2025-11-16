@@ -1,3 +1,20 @@
+## 0.5.0 (2025-11-16)
+
+### Feat
+
+- **exercice**: manage exercice position
+- **sets**: sort sets by positions
+- **set**: added position in query
+- **models**: added positions to exercices and sets
+- **exercice**: added query change name exercice
+
+### Fix
+
+- **workout-id**: parse int workout id params
+- **scripts**: update scripts
+- **config**: removed unused fime
+- **app-config**: fix app config for autocompletion
+
 ## 0.4.13 (2025-11-14)
 
 ### Fix
