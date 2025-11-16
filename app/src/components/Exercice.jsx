@@ -96,11 +96,13 @@ const Exercice = ({ workoutId, exercice }) => {
 
           <TableBody>
             {exercice?.sets?.length > 0 &&
-              exercice.sets.map((set, idx) => (
-                <TableRow key={idx} className="border-muted/30">
-                  <Set set={set} workoutId={workoutId} />
-                </TableRow>
-              ))}
+              exercice.sets
+                .sort((a, b) => a.position - b.position)
+                .map((set, idx) => (
+                  <TableRow key={idx} className="border-muted/30">
+                    <Set set={set} workoutId={workoutId} />
+                  </TableRow>
+                ))}
             <CreateSet workoutId={workoutId} exercice={exercice} />
           </TableBody>
 
