@@ -9,6 +9,7 @@ import {
   ExercicePutType,
   ExerciceSetCreate,
   ExerciceSetCreateType,
+  ExerciceSetPositionsType,
 } from "../validators/exercice";
 import { timeToDatetime } from "../validators/set";
 
@@ -119,5 +120,84 @@ router.delete("/:id", async (req: Request<{ id: string }>, res: Response) => {
     res.status(400).json({ error });
   }
 });
+
+router.post(
+  "/:id/positions",
+  async (
+    req: Request<{ id: string }, {}, ExerciceSetPositionsType>,
+    res: Response
+  ) => {
+    const { id } = req.params;
+    const { position, setId } = req.body;
+    const exerciceId = Number(id);
+
+    if (isNaN(exerciceId)) {
+      res.status(404).json({ error: "Exercice id must be a number." });
+    }
+
+    try {
+      const exercice = await prisma.exercice.findFirstOrThrow({
+        where: { id: Number(id) },
+      });
+
+      const sets = await prisma.set.findMany({
+        where: {
+          exerciceId,
+          userId: (req as UserReq).user.id,
+        },
+      });
+
+      if (sets.length === 0) {
+        res.status(400).json({ error: "The exercice does not have any sets." });
+        return;
+      }
+      const selectedSet = sets.filter((set) => set.id === setId)[0];
+
+      if (!selectedSet) {
+        res
+          .status(404)
+          .json({ error: "Set id does not exists in this exercice" });
+        return;
+      }
+
+      if (position === selectedSet.position) {
+        res.status(200).json(exercice);
+        return;
+      }
+
+      const increment = selectedSet.position < position ? -1 : 1;
+
+      const initPosition: number = selectedSet.position;
+      const minPos = Math.min(initPosition, position);
+      const maxPos = Math.max(initPosition, position);
+
+      await prisma.set.updateMany({
+        where: {
+          exerciceId,
+          userId: (req as UserReq).user.id,
+          position: { gte: minPos, lte: maxPos },
+          NOT: { id: selectedSet.id },
+        },
+        data: { position: { increment } },
+      });
+
+      await prisma.set.update({
+        where: { id: selectedSet.id },
+        data: { position },
+      });
+
+      const updatedExercice = await prisma.exercice.findFirstOrThrow({
+        where: {
+          id: exerciceId,
+          userId: (req as UserReq).user.id,
+        },
+      });
+      res.status(200).json(updatedExercice);
+      return;
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  }
+);
 
 export default router;

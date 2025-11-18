@@ -31,3 +31,10 @@ export type ExercicePutType = z.infer<typeof ExercicePut>;
 export const ExerciceId = z.object({
   id: z.number(),
 });
+
+export const ExerciceSetPositions = z.object({
+  setId: z.number(),
+  position: z.number(),
+});
+
+export type ExerciceSetPositionsType = z.infer<typeof ExerciceSetPositions>;
