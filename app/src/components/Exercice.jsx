@@ -102,7 +102,9 @@ const Exercice = ({ workoutId, exercice }) => {
                     <Set set={set} workoutId={workoutId} />
                   </TableRow>
                 ))}
-            <CreateSet workoutId={workoutId} exercice={exercice} />
+            <TableRow>
+              <CreateSet workoutId={workoutId} exercice={exercice} />
+            </TableRow>
           </TableBody>
 
           <TableFooter>
