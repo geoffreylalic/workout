@@ -16,18 +16,16 @@ const CreateSet = ({ workoutId, exercice }) => {
     },
   });
   return (
-    <TableCell colSpan={5} className="py-3 text-center">
-      <Button
-        onClick={() => {
-          mutationSet.mutate({
-            exerciceId: exercice.id,
-            position: exercice.sets.length,
-          });
-        }}
-      >
-        Ajouter une série
-      </Button>
-    </TableCell>
+    <Button
+      onClick={() => {
+        mutationSet.mutate({
+          exerciceId: exercice.id,
+          position: exercice.sets.length,
+        });
+      }}
+    >
+      Ajouter une série
+    </Button>
   );
 };
 

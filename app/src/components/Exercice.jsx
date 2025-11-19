@@ -86,7 +86,6 @@ const Exercice = ({ workoutId, exercice }) => {
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (active.id !== over.id) {
-      console.log(active.id, over.data.current.sortable.index);
       mutationPostSetPosition.mutate({
         id: exercice.id,
         body: { setId: active.id, position: over.data.current.sortable.index },
@@ -95,14 +94,15 @@ const Exercice = ({ workoutId, exercice }) => {
   };
 
   return (
-    <Card className="mb-6 shadow-sm border-border/40">
-      <CardHeader className="flex flex-row items-center justify-between pb-3">
+    <Card className="mb-6 shadow-lg border border-border/40 rounded-xl">
+      <CardHeader className="flex items-center justify-between pb-4">
         <div
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => {
             setIsHovered(false);
             handleExerciceName();
           }}
+          className="flex-1"
         >
           {isHovered ? (
             <Input
@@ -111,33 +111,34 @@ const Exercice = ({ workoutId, exercice }) => {
               placeholder={exercice.name}
               defaultValue={exercice.name}
               onChange={(e) => setExerciceName(e.target.value)}
+              className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-400 rounded-md px-2 py-1"
             />
           ) : (
-            <CardTitle className="text-lg font-semibold">
+            <CardTitle className="text-xl font-bold text-gray-800">
               {exercice.name}
             </CardTitle>
           )}
         </div>
-
+        <CreateSet workoutId={workoutId} exercice={exercice} />
         <Button
           variant="ghost"
           size="icon"
-          className="text-muted-foreground hover:text-destructive"
+          className="text-muted-foreground hover:text-destructive transition-colors duration-200"
           onClick={() => mutationExercice.mutate(exercice.id)}
         >
           <Trash2 className="h-5 w-5" />
         </Button>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="overflow-x-auto">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
         >
-          <Table>
+          <Table className="min-w-full border-collapse">
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-gray-100">
                 <TableHead></TableHead>
                 <TableHead>Reps</TableHead>
                 <TableHead>Poids</TableHead>
@@ -163,43 +164,39 @@ const Exercice = ({ workoutId, exercice }) => {
                       />
                     ))}
               </SortableContext>
-              <TableRow>
-                <CreateSet workoutId={workoutId} exercice={exercice} />
-              </TableRow>
             </TableBody>
 
             <TableFooter>
-              <TableRow>
+              <TableRow className="bg-gray-50 font-semibold">
                 <TableCell>Total</TableCell>
                 <TableCell>
-                  Reps:{" "}
                   {exercice.sets.reduce(
                     (acc, set) =>
-                      (acc += !isNaN(Number(set.repetitions))
+                      acc +
+                      (!isNaN(Number(set.repetitions))
                         ? Number(set.repetitions)
                         : 0),
                     0
                   )}
                 </TableCell>
                 <TableCell>
-                  Poids:{" "}
                   {exercice.sets.reduce(
                     (acc, set) =>
-                      (acc += !isNaN(Number(set.weight))
-                        ? Number(set.weight)
-                        : 0),
+                      acc +
+                      (!isNaN(Number(set.weight)) ? Number(set.weight) : 0),
                     0
                   )}
                 </TableCell>
                 <TableCell>
-                  Repos:{" "}
                   {exercice.sets.reduce(
                     (acc, set) =>
-                      (acc += !isNaN(Number(set.rest)) ? Number(set.rest) : 0),
+                      acc + (!isNaN(Number(set.rest)) ? Number(set.rest) : 0),
                     0
                   )}
                 </TableCell>
-                <TableCell>Sets: {exercice.sets.length}</TableCell>
+                <TableCell className="text-right">
+                  {exercice.sets.length} Sets
+                </TableCell>
               </TableRow>
             </TableFooter>
           </Table>
