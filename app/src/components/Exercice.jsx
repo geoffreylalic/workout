@@ -63,7 +63,9 @@ const Exercice = ({ workoutId, exercice }) => {
   const mutationPostSetPosition = useMutation({
     mutationFn: postSetPositionsFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workouts", workoutId] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["workouts", workoutId] });
+      }, 0);
     },
   });
 
@@ -85,6 +87,7 @@ const Exercice = ({ workoutId, exercice }) => {
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
+    if (!over || active.id === over.id) return;
     if (active.id !== over.id) {
       mutationPostSetPosition.mutate({
         id: exercice.id,

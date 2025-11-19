@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { createWorkoutFn, getWorkout } from "../../queries/workouts";
+import { useQuery } from "@tanstack/react-query";
+import { getWorkout } from "../../queries/workouts";
 import Exercice from "../../components/Exercice";
 import CreateExercice from "../../components/CreateExercice";
 import { useParams } from "react-router";
@@ -15,15 +13,10 @@ import {
 } from "@/components/ui/card";
 
 export const Workout = () => {
-  const [workoutName, setWorkoutName] = useState("");
-
   const { workoutId } = useParams();
-
   const id = Number(workoutId);
 
-  if (isNaN(id)) {
-    return <div>ID invalide</div>;
-  }
+  if (isNaN(id)) return <div>ID invalide</div>;
 
   const {
     data: workoutData,
@@ -34,34 +27,46 @@ export const Workout = () => {
     queryFn: () => getWorkout(id),
   });
 
-  if (isError) return <div>error</div>;
-  if (isLoading) return <div>Loading ..</div>;
-  if (workoutData)
-    return (
-      <Card>
+  if (isError) return <div>Erreur lors du chargement</div>;
+  if (isLoading) return <div>Chargement…</div>;
+
+  return (
+    <div className="max-w-3xl mx-auto mt-8">
+      <Card className="shadow-md border-border/40">
         <CardHeader>
-          <CardTitle>Créer un entrainement</CardTitle>
-          <CardDescription>Créer votre entrainement</CardDescription>
+          <CardTitle className="text-2xl font-semibold">
+            {workoutData.name}
+          </CardTitle>
+          <CardDescription>
+            Organisez vos exercices, ajoutez des séries, suivez vos charges.
+          </CardDescription>
         </CardHeader>
+
         <CardContent>
-          <div className="m-5">
-            <h1 className="mb-5 text-xl font-bold">{workoutData.name}</h1>
+          <div className="space-y-6 mt-4">
+            {workoutData.exercices?.length > 0 ? (
+              workoutData.exercices
+                .sort((a, b) => a.position - b.position)
+                .map((exercice) => (
+                  <Exercice
+                    key={exercice.id}
+                    workoutId={id}
+                    exercice={exercice}
+                  />
+                ))
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                Aucun exercice pour le moment.
+              </p>
+            )}
 
-            {isLoading && <p>Chargement du workout...</p>}
-            {isError && <p>Erreur lors du chargement du workout.</p>}
-            <div>
-              {workoutData &&
-                workoutData.exercices?.length > 0 &&
-                workoutData.exercices
-                  .sort((a, b) => a.position < b.position)
-                  .map((exercice, key) => (
-                    <Exercice workoutId={id} exercice={exercice} key={key} />
-                  ))}
-
-              {id && <CreateExercice workout={workoutData} />}
+            {/* Bouton ajouter un exercice */}
+            <div className="flex justify-center pt-4">
+              <CreateExercice workout={workoutData} />
             </div>
           </div>
         </CardContent>
       </Card>
-    );
+    </div>
+  );
 };
