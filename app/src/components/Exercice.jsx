@@ -40,6 +40,9 @@ import { RowSet } from "./RowSet";
 const Exercice = ({ workoutId, exercice }) => {
   const [exerciceName, setExerciceName] = useState(exercice.name);
   const [isHovered, setIsHovered] = useState(false);
+  const totalReps = 0;
+  const totalWeight = 0;
+  const totaltRest = 0;
 
   const queryClient = useQueryClient();
 
@@ -168,10 +171,35 @@ const Exercice = ({ workoutId, exercice }) => {
             <TableFooter>
               <TableRow>
                 <TableCell>Total</TableCell>
-                <TableCell>Reps</TableCell>
-                <TableCell>Poids</TableCell>
-                <TableCell>Repos</TableCell>
-                <TableCell>Tonnage</TableCell>
+                <TableCell>
+                  Reps:{" "}
+                  {exercice.sets.reduce(
+                    (acc, set) =>
+                      (acc += !isNaN(Number(set.repetitions))
+                        ? Number(set.repetitions)
+                        : 0),
+                    0
+                  )}
+                </TableCell>
+                <TableCell>
+                  Poids:{" "}
+                  {exercice.sets.reduce(
+                    (acc, set) =>
+                      (acc += !isNaN(Number(set.weight))
+                        ? Number(set.weight)
+                        : 0),
+                    0
+                  )}
+                </TableCell>
+                <TableCell>
+                  Repos:{" "}
+                  {exercice.sets.reduce(
+                    (acc, set) =>
+                      (acc += !isNaN(Number(set.rest)) ? Number(set.rest) : 0),
+                    0
+                  )}
+                </TableCell>
+                <TableCell>Sets: {exercice.sets.length}</TableCell>
               </TableRow>
             </TableFooter>
           </Table>
