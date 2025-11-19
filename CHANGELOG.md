@@ -1,3 +1,15 @@
+## 0.6.0 (2025-11-19)
+
+### Feat
+
+- **set**: added ui on changing position of sets
+- **package**: added dnd kit and dnd sortable
+- **set**: added change position route
+
+### Fix
+
+- **set**: missing tablerow on table of set
+
 ## 0.5.0 (2025-11-16)
 
 ### Feat
