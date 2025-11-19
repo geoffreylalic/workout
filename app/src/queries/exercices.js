@@ -40,3 +40,8 @@ export const putExerciceFn = async (data) => {
   const res = await client.put(`/exercices/${data.id}`, data.body);
   return res.data;
 };
+
+export const postSetPositionsFn = async (data) => {
+  const res = await client.post(`/exercices/${data.id}/positions`, data.body);
+  return res.data;
+};

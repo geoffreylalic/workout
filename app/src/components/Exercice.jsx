@@ -14,9 +14,28 @@ import { Trash2 } from "lucide-react";
 import Set from "./Set";
 import CreateSet from "./CreateSet";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteExerciceFn, putExerciceFn } from "../queries/exercices";
+import {
+  deleteExerciceFn,
+  postSetPositionsFn,
+  putExerciceFn,
+} from "../queries/exercices";
 import { useState } from "react";
 import { Input } from "./ui/input";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { RowSet } from "./RowSet";
 
 const Exercice = ({ workoutId, exercice }) => {
   const [exerciceName, setExerciceName] = useState(exercice.name);
@@ -38,11 +57,36 @@ const Exercice = ({ workoutId, exercice }) => {
     },
   });
 
+  const mutationPostSetPosition = useMutation({
+    mutationFn: postSetPositionsFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workouts", workoutId] });
+    },
+  });
+
   const handleExerciceName = () => {
     if (exerciceName !== exercice.name) {
       mutationPutExercice.mutate({
         id: exercice.id,
         body: { name: exerciceName },
+      });
+    }
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      console.log(active.id, over.data.current.sortable.index);
+      mutationPostSetPosition.mutate({
+        id: exercice.id,
+        body: { setId: active.id, position: over.data.current.sortable.index },
       });
     }
   };
@@ -83,39 +127,55 @@ const Exercice = ({ workoutId, exercice }) => {
       </CardHeader>
 
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Reps</TableHead>
-              <TableHead>Poids</TableHead>
-              <TableHead>Repos</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead></TableHead>
+                <TableHead>Reps</TableHead>
+                <TableHead>Poids</TableHead>
+                <TableHead>Repos</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
 
-          <TableBody>
-            {exercice?.sets?.length > 0 &&
-              exercice.sets
-                .sort((a, b) => a.position - b.position)
-                .map((set, idx) => (
-                  <TableRow key={idx} className="border-muted/30">
-                    <Set set={set} workoutId={workoutId} />
-                  </TableRow>
-                ))}
-            <TableRow>
-              <CreateSet workoutId={workoutId} exercice={exercice} />
-            </TableRow>
-          </TableBody>
+            <TableBody>
+              <SortableContext
+                items={exercice.sets.map((s) => s.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {exercice.sets.length > 0 &&
+                  exercice.sets
+                    .sort((a, b) => a.position - b.position)
+                    .map((set) => (
+                      <RowSet
+                        key={set.id}
+                        id={set.id}
+                        set={set}
+                        workoutId={workoutId}
+                      />
+                    ))}
+              </SortableContext>
+              <TableRow>
+                <CreateSet workoutId={workoutId} exercice={exercice} />
+              </TableRow>
+            </TableBody>
 
-          <TableFooter>
-            <TableRow>
-              <TableCell>Total reps</TableCell>
-              <TableCell>Total poids</TableCell>
-              <TableCell>Total repos</TableCell>
-              <TableCell>Total tonnage</TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
+            <TableFooter>
+              <TableRow>
+                <TableCell>Total</TableCell>
+                <TableCell>Reps</TableCell>
+                <TableCell>Poids</TableCell>
+                <TableCell>Repos</TableCell>
+                <TableCell>Tonnage</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </DndContext>
       </CardContent>
     </Card>
   );

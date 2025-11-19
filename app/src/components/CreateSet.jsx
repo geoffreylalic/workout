@@ -16,7 +16,7 @@ const CreateSet = ({ workoutId, exercice }) => {
     },
   });
   return (
-    <TableCell colSpan={4} className="py-3 text-center">
+    <TableCell colSpan={5} className="py-3 text-center">
       <Button
         onClick={() => {
           mutationSet.mutate({
