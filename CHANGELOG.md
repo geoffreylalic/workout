@@ -1,3 +1,9 @@
+## 0.7.0 (2025-11-19)
+
+### Feat
+
+- **exercices**: calculated total reps, weight and rest
+
 ## 0.6.0 (2025-11-19)
 
 ### Feat
