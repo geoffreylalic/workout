@@ -140,18 +140,9 @@ router.post(
         where: { id: Number(id) },
       });
 
-      const sets = await prisma.set.findMany({
-        where: {
-          exerciceId,
-          userId: (req as UserReq).user.id,
-        },
+      const selectedSet = await prisma.set.findFirstOrThrow({
+        where: { id: setId, exerciceId },
       });
-
-      if (sets.length === 0) {
-        res.status(400).json({ error: "The exercice does not have any sets." });
-        return;
-      }
-      const selectedSet = sets.filter((set) => set.id === setId)[0];
 
       if (!selectedSet) {
         res
