@@ -19,3 +19,12 @@ export const WorkoutUpdate = z.object({
 });
 
 export type WorkoutUpdateType = z.infer<typeof WorkoutUpdate>;
+
+export const WorkoutExercicesPositions = z.object({
+  exerciceId: z.number(),
+  position: z.number(),
+});
+
+export type WorkoutExercicesPositionsType = z.infer<
+  typeof WorkoutExercicesPositions
+>;

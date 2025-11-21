@@ -7,6 +7,7 @@ import {
   WorkoutCreateFull,
   WorkoutCreateFullType,
   WorkoutCreateType,
+  WorkoutExercicesPositionsType,
   WorkoutUpdate,
   WorkoutUpdateType,
 } from "../validators/workout";
@@ -146,5 +147,75 @@ router.delete("/:id", async (req: Request<{ id: string }>, res: Response) => {
   }
   return;
 });
+
+router.post(
+  "/:id/positions",
+  async (
+    req: Request<{ id: string }, {}, WorkoutExercicesPositionsType>,
+    res: Response
+  ) => {
+    const { id } = req.params;
+    const { position, exerciceId } = req.body;
+    const workoutId = Number(id);
+
+    if (isNaN(exerciceId)) {
+      res.status(404).json({ error: "Exercice id must be a number." });
+    }
+
+    try {
+      const workout = await prisma.workout.findFirstOrThrow({
+        where: { id: workoutId },
+      });
+
+      const selectedExercice = await prisma.exercice.findFirstOrThrow({
+        where: { id: exerciceId, workoutId },
+      });
+
+      if (!selectedExercice) {
+        res
+          .status(404)
+          .json({ error: "Set id does not exists in this exercice" });
+        return;
+      }
+
+      if (position === selectedExercice.position) {
+        res.status(200).json(workout);
+        return;
+      }
+
+      const increment = selectedExercice.position < position ? -1 : 1;
+
+      const initPosition: number = selectedExercice.position;
+      const minPos = Math.min(initPosition, position);
+      const maxPos = Math.max(initPosition, position);
+
+      await prisma.exercice.updateMany({
+        where: {
+          workoutId,
+          userId: (req as UserReq).user.id,
+          position: { gte: minPos, lte: maxPos },
+          NOT: { id: selectedExercice.id },
+        },
+        data: { position: { increment } },
+      });
+
+      await prisma.exercice.update({
+        where: { id: selectedExercice.id },
+        data: { position },
+      });
+
+      const updatedExercice = await prisma.exercice.findFirstOrThrow({
+        where: {
+          id: exerciceId,
+          userId: (req as UserReq).user.id,
+        },
+      });
+      res.status(200).json(updatedExercice);
+      return;
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  }
+);
 
 export default router;
