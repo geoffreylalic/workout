@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { GripVerticalIcon, Trash2 } from "lucide-react";
+import { Check, GripVerticalIcon, Pencil, Trash2, X } from "lucide-react";
 
 import Set from "./Set";
 import CreateSet from "./CreateSet";
@@ -42,7 +42,7 @@ import { RowSet } from "./RowSet";
 
 const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
   const [exerciceName, setExerciceName] = useState(exercice.name);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [activeSet, setActiveSet] = useState(null);
   const totalReps = 0;
   const totalWeight = 0;
@@ -87,6 +87,7 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
         body: { name: exerciceName },
       });
     }
+    setIsUpdate(false);
   };
 
   const sensors = useSensors(
@@ -110,71 +111,93 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
   return (
     !isOverlay && (
       <Card
-        className="mb-6 shadow-lg border border-border/40 rounded-xl"
         ref={setNodeRef}
         style={style}
         {...attributes}
-        key={exercice.id}
-        className="border-muted/30"
+        className="mb-6 rounded-xl border border-border/40 shadow-sm hover:shadow-md transition-shadow bg-white"
       >
-        <CardHeader className="flex items-center justify-between gap-4 pb-4">
-          <div className="flex items-center gap-3 flex-1">
-            <div className="cursor-grab active:cursor-grabbing text-muted-foreground select-none">
-              <GripVerticalIcon
-                {...listeners}
-                className="h-5 w-5 cursor-grab"
-              />
-            </div>
-
-            <div
-              className="flex-1"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => {
-                setIsHovered(false);
-                handleExerciceName();
-              }}
-            >
-              {isHovered ? (
-                <Input
-                  type="text"
-                  name="exerciceName"
-                  placeholder={exercice.name}
-                  defaultValue={exercice.name}
-                  onChange={(e) => setExerciceName(e.target.value)}
-                  className="w-full"
+        <CardHeader className="pb-3 border-b flex flex-col gap-3">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-4 flex-1 min-w-0">
+              <div className="cursor-grab active:cursor-grabbing text-muted-foreground">
+                <GripVerticalIcon
+                  {...listeners}
+                  className="h-6 w-6 opacity-70"
                 />
+              </div>
+
+              {isUpdate ? (
+                <div className="flex items-center gap-1 flex-1 mr-3">
+                  <Input
+                    type="text"
+                    defaultValue={exercice.name}
+                    onChange={(e) => setExerciceName(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleExerciceName}
+                    className="h-8 w-8 rounded-md border-2 border-primary/40 hover:border-primary hover:bg-primary/10 transition-colors"
+                  >
+                    <Check className="h-4 w-4 text-primary" />
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsUpdate(false)}
+                    className="h-8 w-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               ) : (
-                <CardTitle className="text-xl font-bold text-gray-800 truncate">
-                  {exercice.name}
-                </CardTitle>
+                <div className="flex items-center gap-1 flex-1 min-w-0">
+                  <CardTitle className="text-lg font-semibold truncate">
+                    {exercice.name}
+                  </CardTitle>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsUpdate(true)}
+                    className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </div>
               )}
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <CreateSet workoutId={workoutId} exercice={exercice} />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-destructive"
-              onClick={() => mutationExercice.mutate(exercice.id)}
-            >
-              <Trash2 className="h-5 w-5" />
-            </Button>
+            {/* RIGHT: Actions */}
+            <div className="flex items-center gap-2">
+              <CreateSet workoutId={workoutId} exercice={exercice} />
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-destructive transition"
+                onClick={() => mutationExercice.mutate(exercice.id)}
+              >
+                <Trash2 className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </CardHeader>
 
-        <CardContent className="overflow-x-auto">
+        {/* TABLE */}
+        <CardContent className="p-0">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
             onDragStart={(event) => setActiveSet(event.active.data.current.set)}
           >
-            <Table className="min-w-full border-collapse">
+            <Table className="min-w-full">
               <TableHeader>
-                <TableRow className="bg-gray-100">
-                  <TableHead></TableHead>
+                <TableRow className="bg-muted/60">
+                  <TableHead className="w-8"></TableHead>
                   <TableHead>Reps</TableHead>
                   <TableHead>Poids</TableHead>
                   <TableHead>Repos</TableHead>
@@ -187,58 +210,50 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
                   items={exercice.sets.map((s) => s.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  {exercice.sets.length > 0 &&
-                    exercice.sets
-                      .sort((a, b) => a.position - b.position)
-                      .map((set) => (
-                        <RowSet
-                          key={set.id}
-                          id={set.id}
-                          set={set}
-                          workoutId={workoutId}
-                        />
-                      ))}
+                  {exercice.sets.map((set) => (
+                    <RowSet
+                      key={set.id}
+                      id={set.id}
+                      set={set}
+                      workoutId={workoutId}
+                    />
+                  ))}
                 </SortableContext>
               </TableBody>
 
+              {/* FOOTER */}
               <TableFooter>
-                <TableRow className="bg-gray-50 font-semibold">
+                <TableRow className="bg-muted/30 font-medium">
                   <TableCell>Total</TableCell>
                   <TableCell>
                     {exercice.sets.reduce(
-                      (acc, set) =>
-                        acc +
-                        (!isNaN(Number(set.repetitions))
-                          ? Number(set.repetitions)
-                          : 0),
+                      (acc, s) => acc + Number(s.repetitions || 0),
                       0
                     )}
                   </TableCell>
                   <TableCell>
                     {exercice.sets.reduce(
-                      (acc, set) =>
-                        acc +
-                        (!isNaN(Number(set.weight)) ? Number(set.weight) : 0),
+                      (acc, s) => acc + Number(s.weight || 0),
                       0
                     )}
                   </TableCell>
                   <TableCell>
                     {exercice.sets.reduce(
-                      (acc, set) =>
-                        acc + (!isNaN(Number(set.rest)) ? Number(set.rest) : 0),
+                      (acc, s) => acc + Number(s.rest || 0),
                       0
                     )}
                   </TableCell>
                   <TableCell className="text-right">
-                    {exercice.sets.length} Sets
+                    {exercice.sets.length} sets
                   </TableCell>
                 </TableRow>
               </TableFooter>
             </Table>
+
+            {/* DRAG OVERLAY */}
             <DragOverlay>
               {activeSet ? (
                 <RowSet
-                  key={activeSet.id}
                   id={activeSet.id}
                   set={activeSet}
                   workoutId={workoutId}
