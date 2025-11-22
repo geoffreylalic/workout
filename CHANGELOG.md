@@ -1,3 +1,14 @@
+## 0.8.0 (2025-11-22)
+
+### Feat
+
+- **workout**: added drag and drop on exercices
+- **workout**: added change position exercices on workout
+
+### Fix
+
+- **exercice**: refactored change position set api
+
 ## 0.7.0 (2025-11-19)
 
 ### Feat
