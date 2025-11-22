@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getWorkout, postExercicePositionsFn } from "../../queries/workouts";
+import {
+  getWorkout,
+  postExercicePositionsFn,
+  updateWorkoutFn,
+} from "../../queries/workouts";
 import Exercice from "../../components/Exercice";
 import CreateExercice from "../../components/CreateExercice";
 import { useParams } from "react-router";
@@ -25,17 +29,29 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Check, Pencil, X } from "lucide-react";
 
 export const Workout = () => {
   const { workoutId } = useParams();
   const id = Number(workoutId);
   const [activeExercice, setExerciceActive] = useState(null);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [workoutName, setWorkoutName] = useState(null);
   const queryClient = useQueryClient();
+
+  const mutationWorkout = useMutation({
+    mutationFn: updateWorkoutFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["workouts", id]);
+    },
+  });
 
   if (isNaN(id)) return <div>ID invalide</div>;
 
   const {
-    data: workoutData,
+    data: workout,
     isLoading,
     isError,
   } = useQuery({
@@ -62,13 +78,20 @@ export const Workout = () => {
     if (!over || active.id === over.id) return;
     if (active.id !== over.id) {
       mutationPostExercicePosition.mutate({
-        id: workoutId,
+        id: id,
         body: {
           exerciceId: active.data.current.exercice.id,
           position: over.data.current.sortable.index,
         },
       });
     }
+  };
+
+  const handleValidateName = () => {
+    if (workout.name !== workoutName) {
+      mutationWorkout.mutate({ id: workout.id, body: { name: workoutName } });
+    }
+    setIsUpdate(false);
   };
 
   if (isError) return <div>Erreur lors du chargement</div>;
@@ -78,9 +101,48 @@ export const Workout = () => {
     <div className="max-w-3xl mx-auto mt-8">
       <Card className="shadow-md border-border/40">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold">
-            {workoutData.name}
-          </CardTitle>
+          {isUpdate ? (
+            <div className="flex items-center gap-1 flex-1 mr-3">
+              <Input
+                type="text"
+                defaultValue={workout.name}
+                onChange={(e) => setWorkoutName(e.target.value)}
+                className="flex-1"
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleValidateName}
+                className="h-8 w-8 rounded-md border-2 border-primary/40 hover:border-primary hover:bg-primary/10 transition-colors"
+              >
+                <Check className="h-4 w-4 text-primary" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsUpdate(false)}
+                className="h-8 w-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 flex-1 min-w-0">
+              <CardTitle className="text-lg font-semibold truncate">
+                {workout.name}
+              </CardTitle>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsUpdate(true)}
+                className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
           <CardDescription>
             Organisez vos exercices, ajoutez des séries, suivez vos charges.
           </CardDescription>
@@ -97,11 +159,11 @@ export const Workout = () => {
           >
             <div className="space-y-6 mt-4">
               <SortableContext
-                items={workoutData.exercices.map((ex) => ex.id)}
+                items={workout.exercices.map((ex) => ex.id)}
                 strategy={verticalListSortingStrategy}
               >
-                {workoutData.exercices?.length > 0 ? (
-                  workoutData.exercices
+                {workout.exercices?.length > 0 ? (
+                  workout.exercices
                     .sort((a, b) => a.position - b.position)
                     .map((exercice) => (
                       <Exercice
@@ -129,7 +191,7 @@ export const Workout = () => {
                 ) : null}
               </DragOverlay>
               <div className="flex justify-center pt-4">
-                <CreateExercice workout={workoutData} />
+                <CreateExercice workout={workout} />
               </div>
             </div>
           </DndContext>
