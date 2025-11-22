@@ -38,5 +38,12 @@ export const deleteWorkoutFn = async (workoutId) => {
   return res.data;
 };
 
-export const updateWorkoutFn = (workoutId, body) =>
-  client.put(`/workouts/${workoutId}`, body);
+export const updateWorkoutFn = async (workoutId, body) => {
+  res = await client.put(`/workouts/${workoutId}`, body);
+  return res.data;
+};
+
+export const postExercicePositionsFn = async (data) => {
+  const res = await client.post(`/workouts/${data.id}/positions`, data.body);
+  return res.data;
+};

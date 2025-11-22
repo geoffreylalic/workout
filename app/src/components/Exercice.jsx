@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Trash2 } from "lucide-react";
+import { GripVerticalIcon, Trash2 } from "lucide-react";
 
 import Set from "./Set";
 import CreateSet from "./CreateSet";
@@ -33,16 +33,25 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
+  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { RowSet } from "./RowSet";
 
-const Exercice = ({ workoutId, exercice }) => {
+const Exercice = ({ id, workoutId, exercice }) => {
   const [exerciceName, setExerciceName] = useState(exercice.name);
   const [isHovered, setIsHovered] = useState(false);
   const totalReps = 0;
   const totalWeight = 0;
   const totaltRest = 0;
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id, data: { exercice } });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const queryClient = useQueryClient();
 
@@ -97,40 +106,56 @@ const Exercice = ({ workoutId, exercice }) => {
   };
 
   return (
-    <Card className="mb-6 shadow-lg border border-border/40 rounded-xl">
-      <CardHeader className="flex items-center justify-between pb-4">
-        <div
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => {
-            setIsHovered(false);
-            handleExerciceName();
-          }}
-          className="flex-1"
-        >
-          {isHovered ? (
-            <Input
-              type="text"
-              name="exerciceName"
-              placeholder={exercice.name}
-              defaultValue={exercice.name}
-              onChange={(e) => setExerciceName(e.target.value)}
-              className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-400 rounded-md px-2 py-1"
-            />
-          ) : (
-            <CardTitle className="text-xl font-bold text-gray-800">
-              {exercice.name}
-            </CardTitle>
-          )}
+    <Card
+      className="mb-6 shadow-lg border border-border/40 rounded-xl"
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      key={exercice.id}
+      className="border-muted/30"
+    >
+      <CardHeader className="flex items-center justify-between gap-4 pb-4">
+        <div className="flex items-center gap-3 flex-1">
+          <div className="cursor-grab active:cursor-grabbing text-muted-foreground select-none">
+            <GripVerticalIcon {...listeners} className="h-5 w-5 cursor-grab" />
+          </div>
+
+          <div
+            className="flex-1"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => {
+              setIsHovered(false);
+              handleExerciceName();
+            }}
+          >
+            {isHovered ? (
+              <Input
+                type="text"
+                name="exerciceName"
+                placeholder={exercice.name}
+                defaultValue={exercice.name}
+                onChange={(e) => setExerciceName(e.target.value)}
+                className="w-full"
+              />
+            ) : (
+              <CardTitle className="text-xl font-bold text-gray-800 truncate">
+                {exercice.name}
+              </CardTitle>
+            )}
+          </div>
         </div>
-        <CreateSet workoutId={workoutId} exercice={exercice} />
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-muted-foreground hover:text-destructive transition-colors duration-200"
-          onClick={() => mutationExercice.mutate(exercice.id)}
-        >
-          <Trash2 className="h-5 w-5" />
-        </Button>
+
+        <div className="flex items-center gap-2">
+          <CreateSet workoutId={workoutId} exercice={exercice} />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-destructive"
+            onClick={() => mutationExercice.mutate(exercice.id)}
+          >
+            <Trash2 className="h-5 w-5" />
+          </Button>
+        </div>
       </CardHeader>
 
       <CardContent className="overflow-x-auto">

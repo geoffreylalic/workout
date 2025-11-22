@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getWorkout } from "../../queries/workouts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getWorkout, postExercicePositionsFn } from "../../queries/workouts";
 import Exercice from "../../components/Exercice";
 import CreateExercice from "../../components/CreateExercice";
 import { useParams } from "react-router";
@@ -11,10 +11,24 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 export const Workout = () => {
   const { workoutId } = useParams();
   const id = Number(workoutId);
+  const queryClient = useQueryClient();
 
   if (isNaN(id)) return <div>ID invalide</div>;
 
@@ -26,6 +40,34 @@ export const Workout = () => {
     queryKey: ["workouts", id],
     queryFn: () => getWorkout(id),
   });
+
+  const mutationPostExercicePosition = useMutation({
+    mutationFn: postExercicePositionsFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workouts", id] });
+    },
+  });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    if (active.id !== over.id) {
+      mutationPostExercicePosition.mutate({
+        id: workoutId,
+        body: {
+          exerciceId: active.data.current.exercice.id,
+          position: over.data.current.sortable.index,
+        },
+      });
+    }
+  };
 
   if (isError) return <div>Erreur lors du chargement</div>;
   if (isLoading) return <div>Chargement…</div>;
@@ -43,28 +85,38 @@ export const Workout = () => {
         </CardHeader>
 
         <CardContent>
-          <div className="space-y-6 mt-4">
-            {workoutData.exercices?.length > 0 ? (
-              workoutData.exercices
-                .sort((a, b) => a.position - b.position)
-                .map((exercice) => (
-                  <Exercice
-                    key={exercice.id}
-                    workoutId={id}
-                    exercice={exercice}
-                  />
-                ))
-            ) : (
-              <p className="text-muted-foreground text-sm">
-                Aucun exercice pour le moment.
-              </p>
-            )}
-
-            {/* Bouton ajouter un exercice */}
-            <div className="flex justify-center pt-4">
-              <CreateExercice workout={workoutData} />
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="space-y-6 mt-4">
+              <SortableContext
+                items={workoutData.exercices.map((ex) => ex.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {workoutData.exercices?.length > 0 ? (
+                  workoutData.exercices
+                    .sort((a, b) => a.position - b.position)
+                    .map((exercice) => (
+                      <Exercice
+                        key={exercice.id}
+                        workoutId={id}
+                        exercice={exercice}
+                        id={exercice.id}
+                      />
+                    ))
+                ) : (
+                  <p className="text-muted-foreground text-sm">
+                    Aucun exercice pour le moment.
+                  </p>
+                )}
+              </SortableContext>
+              <div className="flex justify-center pt-4">
+                <CreateExercice workout={workoutData} />
+              </div>
             </div>
-          </div>
+          </DndContext>
         </CardContent>
       </Card>
     </div>

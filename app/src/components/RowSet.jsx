@@ -5,7 +5,7 @@ import Set from "./Set";
 import { GripVerticalIcon } from "lucide-react";
 
 export const RowSet = ({ id, set, workoutId }) => {
-  const { attributes, listeners, setNodeRef, transform, transition, } =
+  const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -20,7 +20,7 @@ export const RowSet = ({ id, set, workoutId }) => {
       className="border-muted/30"
     >
       <TableCell>
-        <GripVerticalIcon {...listeners} />
+        <GripVerticalIcon {...listeners} className="h-5 w-5 cursor-grab" />
       </TableCell>
       <Set set={set} workoutId={workoutId} />
     </TableRow>
