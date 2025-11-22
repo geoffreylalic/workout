@@ -14,6 +14,7 @@ import {
 import {
   closestCenter,
   DndContext,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -28,6 +29,7 @@ import {
 export const Workout = () => {
   const { workoutId } = useParams();
   const id = Number(workoutId);
+  const [activeExercice, setExerciceActive] = useState(null);
   const queryClient = useQueryClient();
 
   if (isNaN(id)) return <div>ID invalide</div>;
@@ -89,6 +91,9 @@ export const Workout = () => {
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
+            onDragStart={(event) => {
+              setExerciceActive(event.active.data.current.exercice);
+            }}
           >
             <div className="space-y-6 mt-4">
               <SortableContext
@@ -112,6 +117,17 @@ export const Workout = () => {
                   </p>
                 )}
               </SortableContext>
+              <DragOverlay>
+                {activeExercice ? (
+                  <Exercice
+                    key={activeExercice.id}
+                    workoutId={id}
+                    exercice={activeExercice}
+                    id={activeExercice.id}
+                    isOverlay
+                  />
+                ) : null}
+              </DragOverlay>
               <div className="flex justify-center pt-4">
                 <CreateExercice workout={workoutData} />
               </div>
