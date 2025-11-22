@@ -1,3 +1,9 @@
+## 0.9.0 (2025-11-22)
+
+### Feat
+
+- **workout**: added update workout name
+
 ## 0.8.0 (2025-11-22)
 
 ### Feat
