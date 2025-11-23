@@ -210,14 +210,16 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
                   items={exercice.sets.map((s) => s.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  {exercice.sets.map((set) => (
-                    <RowSet
-                      key={set.id}
-                      id={set.id}
-                      set={set}
-                      workoutId={workoutId}
-                    />
-                  ))}
+                  {exercice.sets
+                    .sort((a, b) => a.position - b.position)
+                    .map((set) => (
+                      <RowSet
+                        key={set.id}
+                        id={set.id}
+                        set={set}
+                        workoutId={workoutId}
+                      />
+                    ))}
                 </SortableContext>
               </TableBody>
 
