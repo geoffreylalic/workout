@@ -41,13 +41,6 @@ export const Workout = () => {
   const [workoutName, setWorkoutName] = useState(null);
   const queryClient = useQueryClient();
 
-  const mutationWorkout = useMutation({
-    mutationFn: updateWorkoutFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["workouts", id]);
-    },
-  });
-
   if (isNaN(id)) return <div>ID invalide</div>;
 
   const {
@@ -57,6 +50,13 @@ export const Workout = () => {
   } = useQuery({
     queryKey: ["workouts", id],
     queryFn: () => getWorkout(id),
+  });
+
+  const mutationWorkout = useMutation({
+    mutationFn: updateWorkoutFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workouts", id] });
+    },
   });
 
   const mutationPostExercicePosition = useMutation({

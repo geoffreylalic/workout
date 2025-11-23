@@ -39,7 +39,7 @@ export const deleteWorkoutFn = async (workoutId) => {
 };
 
 export const updateWorkoutFn = async (data) => {
-  res = await client.put(`/workouts/${data.id}`, data.body);
+  const res = await client.put(`/workouts/${data.id}`, data.body);
   return res.data;
 };
 
