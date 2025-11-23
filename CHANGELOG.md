@@ -1,3 +1,10 @@
+## 0.9.2 (2025-11-23)
+
+### Fix
+
+- **set**: fixed position of sets
+- **auth**: render login page when access_token has expired
+
 ## 0.9.1 (2025-11-23)
 
 ### Fix
