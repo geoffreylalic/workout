@@ -1,12 +1,17 @@
 import { me } from "../../queries/authentication";
 import { useQuery } from "@tanstack/react-query";
 import AuthContext from "./AuthContext";
+import { SignIn } from "@/pages/SignIn";
 
 const AuthProvider = ({ children }) => {
-  const { data, isLoading } = useQuery(me);
+  const { data, isLoading, isError } = useQuery(me);
 
   if (isLoading) {
     return <div>Loading ...</div>;
+  }
+
+  if (isError) {
+    return <SignIn />;
   }
 
   return (
