@@ -1,3 +1,10 @@
+## 0.10.0 (2025-11-24)
+
+### Feat
+
+- **create-workout**: added createdat date to workout creation
+- **shad**: added popover and calendar component from shad cn
+
 ## 0.9.2 (2025-11-23)
 
 ### Fix
