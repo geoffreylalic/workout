@@ -49,10 +49,11 @@ router.post(
   "",
   bodyValidator(WorkoutCreate),
   async (req: Request<{}, {}, WorkoutCreateType>, res: Response) => {
-    const { name } = req.body;
+    const { name, createdAt } = req.body;
     const workout = await prisma.workout.create({
       data: {
-        name: name,
+        name,
+        createdAt,
         userId: (req as UserReq).user.id,
       },
     });

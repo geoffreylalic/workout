@@ -10,6 +10,7 @@ export type WorkoutCreateFullType = z.infer<typeof WorkoutCreateFull>;
 
 export const WorkoutCreate = z.object({
   name: z.string(),
+  createdAt: z.iso.datetime().optional(),
 });
 
 export type WorkoutCreateType = z.infer<typeof WorkoutCreate>;

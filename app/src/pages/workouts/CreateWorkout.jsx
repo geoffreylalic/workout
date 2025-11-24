@@ -13,13 +13,14 @@ import {
 } from "@/components/ui/dialog";
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
 import { Outlet, useNavigate, useSearchParams } from "react-router";
+import { DatePicker } from "@/components/DatePicker";
 
 export const CreateWorkout = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const isDialogOpen = searchParams.get("create-workout", "true");
-
+  const isDialogOpen = searchParams.has("create-workout");
   const navigate = useNavigate();
   const [workoutName, setWorkoutName] = useState("");
+  const [createdAt, setCreatedAt] = useState(null);
   const queryClient = useQueryClient();
   const mutationWorkout = useMutation({
     mutationFn: createWorkoutFn,
@@ -38,7 +39,7 @@ export const CreateWorkout = () => {
         <Dialog
           open={isDialogOpen}
           onOpenChange={(open) => {
-            if (!open) {
+            if (isDialogOpen) {
               setSearchParams(searchParams.delete("create-workout"));
             }
           }}
@@ -60,13 +61,19 @@ export const CreateWorkout = () => {
                   onChange={(e) => setWorkoutName(e.target.value)}
                 />
               </Field>
+              <Field>
+                <FieldLabel htmlFor="createdAt">
+                  Date de l'entrainement
+                </FieldLabel>
+                <DatePicker setDate={setCreatedAt} date={createdAt} />
+              </Field>
             </FieldGroup>
             <DialogFooter>
               <Button
                 className="mt-5"
                 onClick={() => {
                   if (workoutName.trim()) {
-                    mutationWorkout.mutate({ name: workoutName });
+                    mutationWorkout.mutate({ name: workoutName, createdAt });
                   }
                 }}
                 disabled={!workoutName}
