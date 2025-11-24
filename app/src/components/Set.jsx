@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, Pencil, Trash2 } from "lucide-react";
 import { CellSet } from "./CellSet";
 
-const Set = ({ set, workoutId }) => {
+const Set = ({ set, workoutId, isPreview }) => {
   const isNew =
     set.repetitions === null && set.weight === null && set.rest === null;
 
@@ -72,40 +72,42 @@ const Set = ({ set, workoutId }) => {
         isUpdating={editing}
       />
 
-      <TableCell className="flex gap-2 justify-end">
-        <Button
-          onClick={() => {
-            if (editing) handleUpdate();
-            setIsUpdating(!isUpdating);
-          }}
-          disabled={disableUpdate}
-          variant="ghost"
-          size="icon"
-          className="flex items-center gap-1 px-3 py-1"
-        >
-          {mutationUpdateSet.isPending ? (
-            <span className="animate-pulse">...</span>
-          ) : editing ? (
-            <Check className="h-5 w-5" />
-          ) : (
-            <Pencil className="h-5 w-5" />
-          )}
-        </Button>
+      {!isPreview && (
+        <TableCell className="flex gap-2 justify-end">
+          <Button
+            onClick={() => {
+              if (editing) handleUpdate();
+              setIsUpdating(!isUpdating);
+            }}
+            disabled={disableUpdate}
+            variant="ghost"
+            size="icon"
+            className="flex items-center gap-1 px-3 py-1"
+          >
+            {mutationUpdateSet.isPending ? (
+              <span className="animate-pulse">...</span>
+            ) : editing ? (
+              <Check className="h-5 w-5" />
+            ) : (
+              <Pencil className="h-5 w-5" />
+            )}
+          </Button>
 
-        <Button
-          onClick={() => mutationDeleteSet.mutate(set.id)}
-          disabled={mutationDeleteSet.isPending}
-          variant="ghost"
-          size="icon"
-          className="text-muted-foreground hover:text-destructive transition"
-        >
-          {mutationDeleteSet.isPending ? (
-            <span className="animate-pulse">...</span>
-          ) : (
-            <Trash2 className="h-4 w-4" />
-          )}
-        </Button>
-      </TableCell>
+          <Button
+            onClick={() => mutationDeleteSet.mutate(set.id)}
+            disabled={mutationDeleteSet.isPending}
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-destructive transition"
+          >
+            {mutationDeleteSet.isPending ? (
+              <span className="animate-pulse">...</span>
+            ) : (
+              <Trash2 className="h-4 w-4" />
+            )}
+          </Button>
+        </TableCell>
+      )}
     </>
   );
 };

@@ -39,9 +39,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { RowSet } from "./RowSet";
+import { useSearchParams } from "react-router";
 
-const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
+const Exercice = ({ id, workoutId, exercice, isOverlay, isPreview }) => {
   const [exerciceName, setExerciceName] = useState(exercice.name);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isUpdate, setIsUpdate] = useState(false);
   const [activeSet, setActiveSet] = useState(null);
   const totalReps = 0;
@@ -56,13 +58,6 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
   };
 
   const queryClient = useQueryClient();
-
-  const mutationExercice = useMutation({
-    mutationFn: deleteExerciceFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workouts", workoutId] });
-    },
-  });
 
   const mutationPutExercice = useMutation({
     mutationFn: putExerciceFn,
@@ -108,6 +103,12 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
     }
   };
 
+  const handleDelete = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("delete-exercice", exercice.id);
+    setSearchParams(newParams);
+  };
+
   return (
     !isOverlay && (
       <Card
@@ -120,10 +121,12 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-4 flex-1 min-w-0">
               <div className="cursor-grab active:cursor-grabbing text-muted-foreground">
-                <GripVerticalIcon
-                  {...listeners}
-                  className="h-6 w-6 opacity-70"
-                />
+                {!isPreview && (
+                  <GripVerticalIcon
+                    {...listeners}
+                    className="h-6 w-6 opacity-70"
+                  />
+                )}
               </div>
 
               {isUpdate ? (
@@ -158,31 +161,34 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
                     {exercice.name}
                   </CardTitle>
 
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsUpdate(true)}
-                    className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/40"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
+                  {!isPreview && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsUpdate(true)}
+                      className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* RIGHT: Actions */}
-            <div className="flex items-center gap-2">
-              <CreateSet workoutId={workoutId} exercice={exercice} />
+            {!isPreview && (
+              <div className="flex items-center gap-2">
+                <CreateSet workoutId={workoutId} exercice={exercice} />
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-destructive transition"
-                onClick={() => mutationExercice.mutate(exercice.id)}
-              >
-                <Trash2 className="h-5 w-5" />
-              </Button>
-            </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground hover:text-destructive transition"
+                  onClick={handleDelete}
+                >
+                  <Trash2 className="h-5 w-5" />
+                </Button>
+              </div>
+            )}
           </div>
         </CardHeader>
 
@@ -201,7 +207,9 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
                   <TableHead>Reps</TableHead>
                   <TableHead>Poids</TableHead>
                   <TableHead>Repos</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  {!isPreview && (
+                    <TableHead className="text-right">Actions</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
 
@@ -219,6 +227,7 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
                           id={set.id}
                           set={set}
                           workoutId={workoutId}
+                          isPreview={isPreview}
                         />
                       ))
                   ) : (
@@ -249,9 +258,11 @@ const Exercice = ({ id, workoutId, exercice, isOverlay }) => {
                       0
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
-                    {exercice.sets.length} sets
-                  </TableCell>
+                  {!isPreview && (
+                    <TableCell className="text-right">
+                      {exercice.sets.length} sets
+                    </TableCell>
+                  )}
                 </TableRow>
               </TableFooter>
             </Table>

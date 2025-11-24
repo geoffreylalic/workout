@@ -16,6 +16,7 @@ import Home from "./pages/Home";
 import { CreateWorkout } from "./pages/workouts/CreateWorkout";
 import { SignUp } from "./pages/Signup";
 import { SignIn } from "./pages/SignIn";
+import { DeleteExercice } from "./pages/DeleteExercice";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -29,9 +30,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Route path="/register" element={<SignUp />} />
               <Route path="/" element={<SideBar />}>
                 <Route element={<CreateWorkout />}>
-                  <Route index element={<Home />} />
-                  <Route path="workouts" element={<></>} />
-                  <Route path="workouts/:workoutId" element={<Workout />} />
+                  <Route element={<DeleteExercice />}>
+                    <Route index element={<Home />} />
+                    <Route path="workouts" element={<></>} />
+                    <Route path="workouts/:workoutId" element={<Workout />} />
+                  </Route>
                 </Route>
               </Route>
             </Routes>
