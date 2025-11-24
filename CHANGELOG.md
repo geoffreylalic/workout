@@ -1,3 +1,10 @@
+## 0.11.0 (2025-11-24)
+
+### Feat
+
+- **workout**: added delete workout from a dialog
+- **exercice**: delete exercice with a dialog
+
 ## 0.10.0 (2025-11-24)
 
 ### Feat
