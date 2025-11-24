@@ -31,7 +31,7 @@ import {
 } from "@dnd-kit/sortable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Check, Pencil, X } from "lucide-react";
+import { Check, Pencil, Trash2, X } from "lucide-react";
 
 export const Workout = () => {
   const { workoutId } = useParams();
@@ -128,18 +128,28 @@ export const Workout = () => {
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-1 flex-1 min-w-0">
-              <CardTitle className="text-lg font-semibold truncate">
-                {workout.name}
-              </CardTitle>
+            <div className="flex items-center gap-1 flex-1 min-w-0 justify-between">
+              <div className="flex">
+                <CardTitle className="text-lg font-semibold truncate">
+                  {workout.name}
+                </CardTitle>
 
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsUpdate(true)}
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </div>
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsUpdate(true)}
-                className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                onClick={() => {}}
+                className="text-muted-foreground hover:text-destructive transition"
               >
-                <Pencil className="h-4 w-4" />
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           )}

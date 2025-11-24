@@ -79,8 +79,8 @@ const Set = ({ set, workoutId }) => {
             setIsUpdating(!isUpdating);
           }}
           disabled={disableUpdate}
-          variant="outline"
-          size="sm"
+          variant="ghost"
+          size="icon"
           className="flex items-center gap-1 px-3 py-1"
         >
           {mutationUpdateSet.isPending ? (
@@ -95,13 +95,14 @@ const Set = ({ set, workoutId }) => {
         <Button
           onClick={() => mutationDeleteSet.mutate(set.id)}
           disabled={mutationDeleteSet.isPending}
-          size="sm"
-          className="flex items-center gap-1 px-3 py-1 hover:bg-red-600 hover:text-white"
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-destructive transition"
         >
           {mutationDeleteSet.isPending ? (
             <span className="animate-pulse">...</span>
           ) : (
-            <Trash2 className="h-5 w-5" />
+            <Trash2 className="h-4 w-4" />
           )}
         </Button>
       </TableCell>
