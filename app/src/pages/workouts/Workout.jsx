@@ -7,7 +7,7 @@ import {
 } from "../../queries/workouts";
 import Exercice from "../../components/Exercice";
 import CreateExercice from "../../components/CreateExercice";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import {
   Card,
   CardHeader,
@@ -36,6 +36,7 @@ import { Check, Pencil, Trash2, X } from "lucide-react";
 export const Workout = () => {
   const { workoutId } = useParams();
   const id = Number(workoutId);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeExercice, setExerciceActive] = useState(null);
   const [isUpdate, setIsUpdate] = useState(false);
   const [workoutName, setWorkoutName] = useState(null);
@@ -65,6 +66,12 @@ export const Workout = () => {
       queryClient.invalidateQueries({ queryKey: ["workouts", id] });
     },
   });
+
+  const handleDelete = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("delete-workout", workout.id);
+    setSearchParams(newParams);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -146,7 +153,7 @@ export const Workout = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => {}}
+                onClick={handleDelete}
                 className="text-muted-foreground hover:text-destructive transition"
               >
                 <Trash2 className="h-4 w-4" />
