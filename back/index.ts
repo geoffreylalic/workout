@@ -11,6 +11,7 @@ import { logger } from "./middlewares/logger";
 import auth from "./routes/auth";
 import workouts from "./routes/workouts";
 import exercices from "./routes/exercices";
+import dashboard from "./routes/dashboard";
 import sets from "./routes/sets";
 import { authentication } from "./middlewares/auth";
 import cors from "cors";
@@ -39,6 +40,7 @@ app.use("/api/auth", auth);
 app.use("/api/workouts", authentication, workouts);
 app.use("/api/exercices", authentication, exercices);
 app.use("/api/sets", authentication, sets);
+app.use("/api/dashboard", authentication, dashboard);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
