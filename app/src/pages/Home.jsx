@@ -1,6 +1,7 @@
 import { Button, Typography } from "@material-tailwind/react";
 import { useNavigate, useSearchParams } from "react-router";
 import Workouts from "../components/Workouts";
+import { VolumeChart } from "@/components/VolumeChart";
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   return (
@@ -19,6 +20,7 @@ const Home = () => {
         </Button>
       </div>
       <div className="m-5">
+        <VolumeChart />
         <Workouts />
       </div>
     </div>
