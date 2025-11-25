@@ -1,3 +1,10 @@
+## 0.12.0 (2025-11-25)
+
+### Feat
+
+- **dashboard**: added line chart to visualize volume of previous workout
+- **dashboard**: added query to get overall volume
+
 ## 0.11.0 (2025-11-24)
 
 ### Feat
