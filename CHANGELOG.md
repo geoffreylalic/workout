@@ -1,3 +1,9 @@
+## 0.13.1 (2025-11-26)
+
+### Fix
+
+- **datepicker**: refactored datepicker to use it with range
+
 ## 0.13.0 (2025-11-26)
 
 ### Feat
