@@ -10,8 +10,40 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 
-export const DatePicker = ({ setDate, date }) => {
+export const DatePicker = ({ onChange, mode = "single" }) => {
   const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(null);
+  const [range, setRange] = useState(null);
+  const selected = mode === "single" ? date : range;
+
+  const renderText = () => {
+    if (mode === "single" && date) {
+      return date.toLocaleDateString();
+    }
+    if (mode === "range" && range) {
+      return `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`;
+    }
+
+    return "Select range";
+  };
+
+  const handleSelect = (selected) => {
+    if (!selected) return;
+
+    if (mode === "single") {
+      setDate(selected);
+      onChange?.(selected);
+      setOpen(false);
+      return;
+    }
+
+    if (mode === "range") {
+      setRange(selected);
+      if (selected?.from && selected?.to) {
+        onChange?.(selected);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col gap-3">
@@ -22,19 +54,17 @@ export const DatePicker = ({ setDate, date }) => {
             id="date"
             className="w-48 justify-between font-normal"
           >
-            {date ? date.toLocaleDateString() : "Select date"}
+            {renderText()}
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
-            mode="single"
-            selected={date}
+            mode={mode}
+            selected={selected}
             captionLayout="dropdown"
-            onSelect={(date) => {
-              setDate(date);
-              setOpen(false);
-            }}
+            onSelect={handleSelect}
+            required={false}
           />
         </PopoverContent>
       </Popover>

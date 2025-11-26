@@ -65,7 +65,12 @@ export const CreateWorkout = () => {
                 <FieldLabel htmlFor="createdAt">
                   Date de l'entrainement
                 </FieldLabel>
-                <DatePicker setDate={setCreatedAt} date={createdAt} />
+                <DatePicker
+                  onChange={(date) => {
+                    setCreatedAt(date);
+                  }}
+                  mode="single"
+                />
               </Field>
             </FieldGroup>
             <DialogFooter>
