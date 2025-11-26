@@ -51,6 +51,7 @@ router.get(
           select: { id: true },
         },
       },
+      orderBy: { createdAt: "asc" },
     });
 
     const foundExercices = workouts.flatMap((w) =>
