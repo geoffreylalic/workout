@@ -60,23 +60,40 @@ router.get(
 
     const sets = await prisma.set.groupBy({
       by: ["exerciceId"],
-      _sum: { weight: true },
+      _sum: { weight: true, repetitions: true, rest: true },
       where: {
         exerciceId: { in: foundExercices },
       },
     });
 
     const setsMap = new Map(
-      sets.map((s) => [s.exerciceId, s._sum?.weight ?? 0])
+      sets.map((s) => [
+        s.exerciceId,
+        {
+          weight: s._sum?.weight ?? 0,
+          repetitions: s._sum?.repetitions ?? 0,
+          rest: s._sum?.rest ?? 0,
+        },
+      ])
     );
 
-    const result = workouts.map((w) => ({
-      createdAt: dayjs(w.createdAt).format("YYYY-MM-DD"),
-      totalWeight: w.exercices.reduce(
-        (acc, ex) => acc + (setsMap.get(ex.id) ?? 0),
-        0
-      ),
-    }));
+    const result = workouts.map((w) => {
+      return {
+        createdAt: dayjs(w.createdAt).format("YYYY-MM-DD"),
+        weight: w.exercices.reduce(
+          (acc, ex) => acc + (setsMap.get(ex.id)?.weight ?? 0),
+          0
+        ),
+        repetitions: w.exercices.reduce(
+          (acc, ex) => acc + (setsMap.get(ex.id)?.repetitions ?? 0),
+          0
+        ),
+        rest: w.exercices.reduce(
+          (acc, ex) => acc + (setsMap.get(ex.id)?.rest ?? 0),
+          0
+        ),
+      };
+    });
 
     res.status(200).json(result);
   }
