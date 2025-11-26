@@ -1,3 +1,14 @@
+## 0.13.0 (2025-11-26)
+
+### Feat
+
+- **dashboard**: added dynamic rendering of rest, weight and repetitions
+- **dashboard**: added repeitions and rest metric to volume
+
+### Fix
+
+- **dashboard**: fixed ordering of volumes
+
 ## 0.12.0 (2025-11-25)
 
 ### Feat
