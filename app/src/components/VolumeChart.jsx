@@ -29,17 +29,21 @@ import { Button } from "./ui/button";
 import dayjs from "dayjs";
 
 const chartConfig = {
+  name: {
+    label: "Entrainement",
+    color: "var(--chart-1)",
+  },
   weight: {
     label: "Charge totale (kg)",
-    color: "var(--chart-1)",
+    color: "var(--chart-2)",
   },
   repetitions: {
     label: "Nombre de répétitions",
-    color: "var(--chart-2)",
+    color: "var(--chart-3)",
   },
   rest: {
     label: "temps de repos (s)",
-    color: "var(--chart-3)",
+    color: "var(--chart-4)",
   },
 };
 
@@ -131,7 +135,7 @@ export const VolumeChart = ({ startDate, endDate }) => {
               right: 12,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={true} />
             <XAxis
               dataKey="createdAt"
               tickLine={false}
@@ -160,13 +164,14 @@ export const VolumeChart = ({ startDate, endDate }) => {
                 />
               }
             />
+            <Line dataKey={"name"} stroke={`var(--color-${name})`} />
             {charts.map((c) => (
               <Line
                 dataKey={c}
                 type="monotone"
                 stroke={`var(--color-${c})`}
                 strokeWidth={2}
-                dot={false}
+                dot={true}
               />
             ))}
           </LineChart>

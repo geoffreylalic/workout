@@ -31,6 +31,7 @@ router.get(
       select: {
         id: true,
         createdAt: true,
+        name: true,
         exercices: {
           select: { id: true },
         },
@@ -64,6 +65,7 @@ router.get(
     const result = workouts.map((w) => {
       return {
         createdAt: dayjs(w.createdAt).format("YYYY-MM-DD"),
+        name: w.name,
         weight: w.exercices.reduce(
           (acc, ex) => acc + (setsMap.get(ex.id)?.weight ?? 0),
           0
