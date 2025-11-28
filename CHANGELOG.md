@@ -1,3 +1,9 @@
+## 0.14.0 (2025-11-28)
+
+### Feat
+
+- **dashboard**: filter chart from range
+
 ## 0.13.1 (2025-11-26)
 
 ### Fix
