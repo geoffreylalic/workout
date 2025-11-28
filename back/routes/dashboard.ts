@@ -2,39 +2,23 @@ import { PrismaClient } from "@prisma/client";
 import e, { Response, NextFunction, Router, Request } from "express";
 import { UserReq } from "../interfaces/request";
 import dayjs from "dayjs";
-import { type Period } from "../validators/dashboard";
+import {
+  VolumeRange,
+  VolumeRangeType,
+  type Period,
+} from "../validators/dashboard";
+import { parse } from "path";
 const router = Router();
 const prisma = new PrismaClient();
 
 router.get(
   "/volume",
-  async (req: Request<{}, {}, {}, { period?: Period }>, res: Response) => {
-    const currentPeriod: Period = !req.query.period
-      ? "current_week"
-      : req.query.period;
-
-    let startDate = null;
-    let endDate = null;
-
-    if (!currentPeriod) {
-      return res.status(400).json({ error: "Missing period query parameter" });
+  async (req: Request<{}, {}, {}, VolumeRangeType>, res: Response) => {
+    const validated = VolumeRange.safeParse(req.query);
+    if (!validated.success) {
+      return res.status(400).json(validated.error);
     }
-
-    if (currentPeriod === "current_week") {
-      startDate = dayjs().startOf("week").toDate();
-      endDate = dayjs().endOf("week").toDate();
-    } else if (currentPeriod === "last_week") {
-      startDate = dayjs().startOf("week").subtract(1, "week").toDate();
-      endDate = dayjs().endOf("week").subtract(1, "week").toDate();
-    } else if (currentPeriod === "current_month") {
-      startDate = dayjs().startOf("month").toDate();
-      endDate = dayjs().endOf("month").toDate();
-    } else if (currentPeriod === "last_month") {
-      startDate = dayjs().startOf("month").subtract(1, "month").toDate();
-      endDate = dayjs().endOf("month").subtract(1, "month").toDate();
-    } else {
-      return res.status(400).json({ error: "Invalid period" });
-    }
+    const { startDate, endDate } = validated.data;
 
     const workouts = await prisma.workout.findMany({
       where: {

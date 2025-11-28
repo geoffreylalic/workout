@@ -11,11 +11,17 @@ import { ChevronDownIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { DatePicker } from "@/components/DatePicker";
 import { useState } from "react";
+import dayjs from "dayjs";
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [date, setDate] = useState(null);
+  const [startDate, setStartDate] = useState(
+    dayjs().subtract(1, "week").toDate()
+  );
+  const [endDate, setEndDate] = useState(dayjs().toDate());
+  const selectedRange = {
+    from: startDate,
+    to: endDate,
+  };
   return (
     <div className="m-5">
       <div className="flex justify-between px-10 py-8">
@@ -24,10 +30,7 @@ const Home = () => {
             Suivi d’entraînement
           </Typography>
           <DatePicker
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
+            selectedElement={selectedRange}
             onChange={(range) => {
               setStartDate(range.from);
               setEndDate(range.to);
@@ -45,7 +48,10 @@ const Home = () => {
         </Button>
       </div>
       <div className="m-5">
-        <VolumeChart />
+        <VolumeChart
+          startDate={dayjs(selectedRange.from).format("YYYY-MM-DD")}
+          endDate={dayjs(selectedRange.to).format("YYYY-MM-DD")}
+        />
         <Workouts />
       </div>
     </div>

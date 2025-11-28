@@ -10,13 +10,19 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 
-export const DatePicker = ({ onChange, mode = "single" }) => {
+export const DatePicker = ({
+  selectedElement = null,
+  onChange,
+  mode = "single",
+}) => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(null);
   const [range, setRange] = useState(null);
   const selected = mode === "single" ? date : range;
-
   const renderText = () => {
+    if (mode === "range" && selectedElement) {
+      return `${selectedElement.from.toLocaleDateString()} - ${selectedElement.to.toLocaleDateString()}`;
+    }
     if (mode === "single" && date) {
       return date.toLocaleDateString();
     }
@@ -61,7 +67,7 @@ export const DatePicker = ({ onChange, mode = "single" }) => {
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
             mode={mode}
-            selected={selected}
+            selected={selectedElement}
             captionLayout="dropdown"
             onSelect={handleSelect}
             required={false}

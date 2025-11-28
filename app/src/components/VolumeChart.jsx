@@ -26,6 +26,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Command, CommandGroup, CommandItem, CommandList } from "./ui/command";
 import { Check } from "lucide-react";
 import { Button } from "./ui/button";
+import dayjs from "dayjs";
 
 const chartConfig = {
   weight: {
@@ -42,7 +43,7 @@ const chartConfig = {
   },
 };
 
-export const VolumeChart = () => {
+export const VolumeChart = ({ startDate, endDate }) => {
   const [activeChart, setActiveChart] = useState("weight");
   const [charts, setCharts] = useState(["weight", "repetitions", "rest"]);
   const options = [
@@ -62,8 +63,8 @@ export const VolumeChart = () => {
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryFn: getVolume,
-    queryKey: ["dashboard"],
+    queryFn: () => getVolume(startDate, endDate),
+    queryKey: ["dashboard", startDate, endDate],
   });
 
   if (isLoading) return <div>Loading ...</div>;
@@ -74,7 +75,8 @@ export const VolumeChart = () => {
         <div className="grid flex-1 gap-1">
           <CardTitle>Volume d'entrainement</CardTitle>
           <CardDescription>
-            Showing total visitors for the last 3 months
+            Showing total visitors from {startDate} to {endDate} (
+            {dayjs(endDate).diff(startDate, "day") + 1} days)
           </CardDescription>
         </div>
         <Popover>
