@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ExerciceCreateFull } from "./exercice";
+import { Exercice } from "@prisma/client";
 
 export const WorkoutCreateFull = z.object({
   name: z.string(),
@@ -29,3 +30,10 @@ export const WorkoutExercicesPositions = z.object({
 export type WorkoutExercicesPositionsType = z.infer<
   typeof WorkoutExercicesPositions
 >;
+
+export type WorkoutVolume = {
+  id: number;
+  createdAt: Date | null;
+  name: string;
+  exercices: Pick<Exercice, "id">[];
+};

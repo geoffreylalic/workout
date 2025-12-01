@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SetCreateFull } from "./set";
+import { Workout } from "@prisma/client";
 
 export const ExerciceCreateFull = z.object({
   name: z.string(),

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // ES 2015
+import { Set } from "@prisma/client";
 dayjs.extend(utc);
 
 export const SetCreateFull = z.object({
@@ -43,3 +44,25 @@ export type SetPutType = z.infer<typeof SetPut>;
 export const SetId = z.object({
   id: z.number(),
 });
+
+export type SetSum = {
+  exerciceId: number;
+  _sum: {
+    weight: number | null;
+    repetitions: number | null;
+    rest: number | null;
+  };
+};
+
+export type SetSumWeightByExercice = {
+  exerciceId: number;
+  _sum: {
+    weight: number | null;
+  };
+};
+
+export type SetSumWeight = {
+  _sum: {
+    weight: number | null;
+  };
+};
