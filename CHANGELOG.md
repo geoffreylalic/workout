@@ -1,3 +1,11 @@
+## 0.15.0 (2025-12-02)
+
+### Feat
+
+- **dashboard**: added metrics to dashboard
+- **dashboard**: added metrics
+- **dashboard**: added workout name in the chart tooltip
+
 ## 0.14.0 (2025-11-28)
 
 ### Feat
