@@ -47,7 +47,14 @@ const chartConfig = {
   },
 };
 
-export const VolumeChart = ({ startDate, endDate }) => {
+export const VolumeChart = ({
+  startDate,
+  endDate,
+  isLoading,
+  isError,
+  data,
+  className,
+}) => {
   const [activeChart, setActiveChart] = useState("weight");
   const [charts, setCharts] = useState(["weight", "repetitions", "rest"]);
   const options = [
@@ -66,15 +73,10 @@ export const VolumeChart = ({ startDate, endDate }) => {
     );
   };
 
-  const { data, isLoading, isError } = useQuery({
-    queryFn: () => getVolume(startDate, endDate),
-    queryKey: ["dashboard", startDate, endDate],
-  });
-
   if (isLoading) return <div>Loading ...</div>;
   if (isError) return <div>Error</div>;
   return (
-    <Card className="py-4 sm:py-0">
+    <Card className={`py-4 sm:py-0 ${className}`}>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle>Volume d'entrainement</CardTitle>
